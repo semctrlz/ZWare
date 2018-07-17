@@ -6,8 +6,18 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit0b88be1637e2a93d86b6983a70771dfe
 {
-    public static $fallbackDirsPsr4 = array (
-        0 => __DIR__ . '/..' . '/zware/php-classes/src',
+    public static $prefixLengthsPsr4 = array (
+        'Z' => 
+        array (
+            'ZWare\\' => 6,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'ZWare\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zware/php-classes/src',
+        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -41,7 +51,8 @@ class ComposerStaticInit0b88be1637e2a93d86b6983a70771dfe
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->fallbackDirsPsr4 = ComposerStaticInit0b88be1637e2a93d86b6983a70771dfe::$fallbackDirsPsr4;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit0b88be1637e2a93d86b6983a70771dfe::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit0b88be1637e2a93d86b6983a70771dfe::$prefixDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInit0b88be1637e2a93d86b6983a70771dfe::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit0b88be1637e2a93d86b6983a70771dfe::$classMap;
 

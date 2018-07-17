@@ -13,7 +13,7 @@
     },
     "autoload": {
         "psr-4": {
-            "": "vendor\\zware\\php-classes\\src"
+            "ZWare\\": "vendor\\zware\\php-classes\\src"
         }
     }
 }
