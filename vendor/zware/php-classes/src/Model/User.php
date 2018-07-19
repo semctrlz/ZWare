@@ -1,10 +1,6 @@
 <?php
 
-
-
 namespace ZWare\Model;
-
-
 
 use \ZWare\DB\Sql;
 
@@ -12,15 +8,9 @@ use \ZWare\Model;
 
 use ZWare\Mailer;
 
-
-
 class User extends Model {
 
-    
-
     const SESSION = "User";
-
-    
 
     const IV ='Js2hS50bvoNDa51m';
 
@@ -28,69 +18,42 @@ class User extends Model {
 
     const METHOD = 'aes-256-cbc';
 
-    
-
-    
-
     public static function login($login, $senha)
-
     {       
-
         $sql = new Sql();
 
-        
+        $results = $sql->select("select * from tb_usuarios u join tb_pessoas p on p.id_pessoa = u.pessoas_id_pessoa where u.login_usuario = :USUARIO or p.email_pessoa = :USUARIO", array(
 
-        $results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :LOGIN", array(
-
-           ":LOGIN"=>$login
-
+           ":USUARIO"=>$login           
         ));
-
+      
         
-
         if(count($results) === 0)
 
         {
-
             throw new \Exception("Usuário não encontrado ou senha inválida.");
-
         }
-
-        
 
         $data = $results[0];
 
-        
-
-        if(password_verify($senha, $data["despassword"]) === true)
-
+        if(password_verify($senha, $data["senha_usuario"]) === true)
         {
-
             $user = new User();
 
             $user->setData($data);
 
-                                   
-
             $_SESSION[User::SESSION] = $user->getData();            
 
-            
-
             return $user;
-
         }
 
         else
 
         {
-
             throw new \Exception("Usuário não encontrado ou senha inválida.");
-
         }
 
     }
-
-        
 
     public static function verifyLogin($inadmin = true)
 
@@ -102,10 +65,10 @@ class User extends Model {
 
             !$_SESSION[User::SESSION] || 
 
-            !(int)$_SESSION[user::SESSION]["iduser"] > 0 || 
+            !(int)$_SESSION[user::SESSION]["id_usuario"] > 0 /*|| 
 
             (bool)$_SESSION[user::SESSION]["inadmin"] != $inadmin
-
+*/
             )
 
         {
@@ -198,11 +161,8 @@ class User extends Model {
 
             ];
 
-        
 
         return password_hash($password, PASSWORD_BCRYPT, $options);
-
-        
 
     }
 
@@ -211,8 +171,6 @@ class User extends Model {
     public function save(){
 
         $sql = new Sql();
-
-                        
 
         $results = $sql->select("CALL sp_users_save(:DESPERSON, :DESLOGIN, :DESPASSWORD, :DESEMAIL, :NRPHONE, :INADMIN)", array(
 

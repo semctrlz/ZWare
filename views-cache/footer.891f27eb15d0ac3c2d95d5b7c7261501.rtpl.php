@@ -1,98 +1,1 @@
-<?php if(!class_exists('Rain\Tpl')){exit;}?><div class="footer-top-area">
-        <div class="zigzag-bottom"></div>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3 col-sm-6">
-                    <div class="footer-about-us">
-                        <h2>Hcode Store</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis sunt id doloribus vero quam laborum quas alias dolores blanditiis iusto consequatur, modi aliquid eveniet eligendi iure eaque ipsam iste, pariatur omnis sint! Suscipit, debitis, quisquam. Laborum commodi veritatis magni at?</p>
-                        <div class="footer-social">
-                            <a href="https://www.facebook.com/hcodebr" target="_blank"><i class="fa fa-facebook"></i></a>
-                            <a href="https://twitter.com/hcodebr" target="_blank"><i class="fa fa-twitter"></i></a>
-                            <a href="https://www.youtube.com/channel/UCjWENuSH2gX55-y7QSZiWxA" target="_blank"><i class="fa fa-youtube"></i></a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-3 col-sm-6">
-                    <div class="footer-menu">
-                        <h2 class="footer-wid-title">Navegação </h2>
-                        <ul>
-                            <li><a href="#">Minha Conta</a></li>
-                            <li><a href="#">Meus Pedidos</a></li>
-                            <li><a href="#">Lista de Desejos</a></li>
-                        </ul>                        
-                    </div>
-                </div>
-                
-                <div class="col-md-3 col-sm-6">
-                    <div class="footer-menu">
-                        <h2 class="footer-wid-title">Categorias</h2>
-                        <ul>
-                            <li><a href="#">Categoria Um</a></li>
-                            <li><a href="#">Categoria Dois</a></li>
-                            <li><a href="#">Categoria Três</a></li>
-                            <li><a href="#">Categoria Quarto</a></li>
-                            <li><a href="#">Categoria Cinco</a></li>
-                        </ul>                        
-                    </div>
-                </div>
-                
-                <div class="col-md-3 col-sm-6">
-                    <div class="footer-newsletter">
-                        <h2 class="footer-wid-title">Newsletter</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis sunt id doloribus!</p>
-                        <div class="newsletter-form">
-                            <form action="#">
-                                <input type="email" placeholder="Type your email">
-                                <input type="submit" value="Subscribe">
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> <!-- End footer top area -->
-    
-    <div class="footer-bottom-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="copyright">
-                        <p>&copy; 2017 Hcode Treinamentos. <a href="http://www.hcode.com.br" target="_blank">hcode.com.br</a></p>
-                    </div>
-                </div>
-                
-                <div class="col-md-4">
-                    <div class="footer-card-icon">
-                        <i class="fa fa-cc-discover"></i>
-                        <i class="fa fa-cc-mastercard"></i>
-                        <i class="fa fa-cc-paypal"></i>
-                        <i class="fa fa-cc-visa"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> <!-- End footer bottom area -->
-   
-    <!-- Latest jQuery form server -->
-    <script src="https://code.jquery.com/jquery.min.js"></script>
-    
-    <!-- Bootstrap JS form CDN -->
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    
-    <!-- jQuery sticky menu -->
-    <script src="res/site/js/owl.carousel.min.js"></script>
-    <script src="res/site/js/jquery.sticky.js"></script>
-    
-    <!-- jQuery easing -->
-    <script src="res/site/js/jquery.easing.1.3.min.js"></script>
-    
-    <!-- Main Script -->
-    <script src="res/site/js/main.js"></script>
-    
-    <!-- Slider -->
-    <script type="text/javascript" src="res/site/js/bxslider.min.js"></script>
-	<script type="text/javascript" src="res/site/js/script.slider.js"></script>
-  </body>
-</html>
+<?php if(!class_exists('Rain\Tpl')){exit;}?>		<!-- Footer -->			<footer id="footer">				<div class="inner">					<div class="content">						<section>							<h3>Accumsan montes viverra</h3>							<p>Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus ornare mi ut ante amet placerat aliquet. Volutpat eu sed ante lacinia sapien lorem accumsan varius montes viverra nibh in adipiscing. Lorem ipsum dolor vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing sed feugiat eu faucibus. Integer ac sed amet praesent. Nunc lacinia ante nunc ac gravida.</p>						</section>						<section>							<h4>Sem turpis amet semper</h4>							<ul class="alt">								<li><a href="#">Dolor pulvinar sed etiam.</a></li>								<li><a href="#">Etiam vel lorem sed amet.</a></li>								<li><a href="#">Felis enim feugiat viverra.</a></li>								<li><a href="#">Dolor pulvinar magna etiam.</a></li>							</ul>						</section>						<section>							<h4>Magna sed ipsum</h4>							<ul class="plain">								<li><a href="#"><i class="icon fa-twitter">&nbsp;</i>Twitter</a></li>								<li><a href="#"><i class="icon fa-facebook">&nbsp;</i>Facebook</a></li>								<li><a href="#"><i class="icon fa-instagram">&nbsp;</i>Instagram</a></li>								<li><a href="#"><i class="icon fa-github">&nbsp;</i>Github</a></li>							</ul>						</section>					</div>					<div class="copyright">						&copy; Untitled. Photos <a href="https://unsplash.co">Unsplash</a>, Video <a href="https://coverr.co">Coverr</a>.					</div>				</div>			</footer>		<!-- Scripts -->			<script src="res/site/js/jquery.min.js"></script>			<script src="res/site/js/browser.min.js"></script>			<script src="res/site/js/breakpoints.min.js"></script>			<script src="res/site/js/util.js"></script>			<script src="res/site/js/main.js"></script>	</body></html>

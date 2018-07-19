@@ -13,8 +13,8 @@ $app = new Slim();
 
 $app->config('debug', true);
 
-$app->get('/', function(){    
-    
+$app->get('/', function(){       
+
     $page = new Page();    
     $page->setTpl("index");    
     
@@ -57,19 +57,38 @@ $app->get('/admin/logout(/)', function(){
     exit;
 });
 
-$app->get('/admin/users(/)', function(){    
+$app->get('/admin/login(/)', function(){    
     
-    User::verifyLogin();
+    User::verifyLogado();   
     
-    $users = User::listAll();
+    $page = new PageAdmin([     
+        "header"=>false,
+        "footer"=>false        
+    ]);
     
-    $page = new PageAdmin();
+    $page->setTpl("login"); 
+});
+
+$app->get('/login(/)', function(){    
+       
+    $page = new Page([
+        "header"=>false,
+        "footer"=>false
+    ]);
     
-    $page->setTpl("users", array(
-        "users"=>$users
-    ));    
+    $page->setTpl("login");    
     exit;
 });
+
+$app->post('/login(/)', function(){    
+       
+    User::login($_POST["login"], $_POST["senha"]);
+    
+    header("location: /admin");
+    
+    exit;
+});
+
 
 $app->get('/admin/users/create(/)', function(){    
     
