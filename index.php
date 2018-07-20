@@ -17,26 +17,8 @@ $app->get('/', function(){
 
     //Verificar se Logado
 
-    if(User::logado())
-    {
-        if(User::permissaoUsuarioMaster()){
-
-            $page = new Page([     
-                "tipoHeader"=>"headerAdmin"            
-            ],["Nome"=>User::retornaNome()]);
-            }
-            else{
-                $page = new Page([     
-                    "tipoHeader"=>"headerLogado"            
-                ], ["Nome"=>User::retornaNome()]);
-            }
-        }else
-        {
-            $page = new Page();   
-        }
-     
-        $page->setTpl("index");    
-    
+    $page = new Page(["tipoHeader"=>"header"], User::dadosUsuario());
+    $page->setTpl("index");    
 });
 
 $app->get('/admin(/)', function(){
@@ -47,7 +29,7 @@ $app->get('/admin(/)', function(){
         
         "Nome"=>User::retornaNome()
         
-        ]);
+    ], "main");
     $page->setTpl("index");
     
     
@@ -114,20 +96,37 @@ $app->post('/login(/)', function(){
     exit;
 });
 
+$app->get('/admin/users(/)', function(){    
+    
+    User::acessoAdmin();
+    User::verifyLogin();
+
+    $page = new PageAdmin([], [
+        
+        "Nome"=>User::retornaNome()
+        
+    ], "usuarios");
+    
+    $page->setTpl("users");    
+    exit;
+});
 
 $app->get('/admin/users/create(/)', function(){    
     
     User::acessoAdmin();
     User::verifyLogin();
 
-    $page = new PageAdmin();
+    $page = new PageAdmin([], [
+        
+        "Nome"=>User::retornaNome()
+        
+    ], "usuarios");
     
     $page->setTpl("users-create");    
     exit;
 });
 
-$app->get('/admin/users/:iduser/delete(/)', function($iduser)
-{
+$app->get('/admin/users/:iduser/delete(/)', function($iduser){
     User::acessoAdmin();
     User::verifyLogin();
 
@@ -157,8 +156,7 @@ $app->get('/admin/users/:iduser(/)', function($iduser){
     exit;
 });
 
-$app->post('/admin/users/create(/)', function()
-{
+$app->post('/admin/users/create(/)', function(){
     User::acessoAdmin();
     User::verifyLogin();
 
@@ -175,8 +173,7 @@ $app->post('/admin/users/create(/)', function()
     
 });
 
-$app->post('/admin/users/:iduser(/)', function($iduser)
-{
+$app->post('/admin/users/:iduser(/)', function($iduser){
     User::acessoAdmin();
     User::verifyLogin();
 

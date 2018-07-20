@@ -2435,7 +2435,13 @@ body {
     height: inherit;
     line-height: inherit;
     padding: 0 1.25rem;
-    text-decoration: none; }
+    text-decoration: none;
+  }
+    @media screen and (max-width: 480px) {
+      #header > .logo {
+        padding: 22px; } }
+
+   
   #header > nav > a {
     color: inherit;
     display: inline-block;
@@ -2472,15 +2478,20 @@ body {
           padding-right: 1rem; } }
 
 @media screen and (max-width: 980px) {
-  body {
-    padding-top: 44px; }
+    body {
+      padding-top: 44px;      
+    }
 
-  #header {
-    height: 44px;
-    line-height: 44px; } }
+    #header {
+      height: 44px;
+      line-height: 44px; } 
+  }
 @media screen and (max-width: 480px) {
   #header {
-    min-width: 320px; } }
+    min-width: 320px;
+    height: 88px; 
+    }
+}
 /* Heading */
 #heading {
   -ms-flex-align: center;

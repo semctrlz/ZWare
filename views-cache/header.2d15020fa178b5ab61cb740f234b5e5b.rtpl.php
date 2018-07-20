@@ -497,7 +497,7 @@ desired effect
 
         <div class="input-group">
 
-          <input type="text" name="q" class="form-control" placeholder="Search...">
+          <input type="text" name="q" class="form-control" placeholder="Busca...">
 
           <span class="input-group-btn">
 
@@ -519,11 +519,13 @@ desired effect
 
       <ul class="sidebar-menu" data-widget="tree">
 
-        <li class="header">HEADER</li>
+        <li class="header">MENUS</li>
 
         <!-- Optionally, you can add icons to the links -->
+        
+        <li <?php if( $local=='perfil' ){ ?>class="active"<?php } ?>><a href="/admin/perfil"><i class="fa fa-user"></i> <span>Perfil</span></a></li>
 
-        <li class="active"><a href="/admin/users"><i class="fa fa-users"></i> <span>Usu&aacute;rios</span></a></li>
+        <li <?php if( $local=='usuarios' ){ ?>class="active"<?php } ?>><a href="/admin/users"><i class="fa fa-users"></i> <span>Usu&aacute;rios</span></a></li>
 
         <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
 

@@ -19,11 +19,28 @@
             
 
 		<!-- Header -->
+
+
+
 			<header id="header">
+					
 				<a class="logo" href="/">ZWare</a>
 				<nav>					
-					<a href="/login"> Login </a> |
-					<a href="#"> Cadastro </a>
+						<?php if( $nome_pessoa=='' ){ ?>
+						
+						<a href="/login"> Login </a> |
+						<a href="#"> Cadastro </a>						
+						
+						<?php }else{ ?>
+						
+						<a href="#"><?php echo htmlspecialchars( $nome_pessoa, ENT_COMPAT, 'UTF-8', FALSE ); ?></a> <a href="/admin/logout">(sair) </a> | 
+						<a href="#">Gerenciar listas </a>
+
+						<?php if( $permissao=='MAS' ){ ?>
+						| 
+						<a href="/admin">Admin </a>
+						<?php } ?>
+						<?php } ?>
 							 
 				</nav>
 			</header>		

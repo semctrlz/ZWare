@@ -22,7 +22,7 @@
 			<header id="header">
 				<a class="logo" href="/">ZWare</a>
 				<nav>
-					<?php echo htmlspecialchars( $Nome, ENT_COMPAT, 'UTF-8', FALSE ); ?> <a href="/admin/logout">(sair) </a> | 
+					<?php echo htmlspecialchars( $nome_pessoa, ENT_COMPAT, 'UTF-8', FALSE ); ?> <a href="/admin/logout">(sair) </a> | 
 					<a href="#">Gerenciar listas </a> | 
 					<a href="/admin">Admin </a>
 				</nav>

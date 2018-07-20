@@ -32,7 +32,7 @@ class Page {
 
 
 
-	public function __construct($opts = array(), $values = array(array()), $tpl_dir = "/views/")
+	public function __construct($opts = array(), $values = array(array()), $local = "", $tpl_dir = "/views/")
 
 	{                
 		$this->options = array_merge($this->defaults, $opts);
@@ -55,6 +55,8 @@ class Page {
 			{				
 				$this->tpl->assign($key, $value);
 			}		
+
+		$this->tpl->assign("local", $local);
 
 		if ($this->options['data']) $this->setData($this->options['data']);
 

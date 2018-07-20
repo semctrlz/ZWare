@@ -172,23 +172,35 @@ class User extends Model {
         }     
     }
 
-    public static function dadosUsuario(){
+    public function dadosUsuario(){
         
-        //Se logado
-        $retorno = ["Vazio"=>"Bem vazio"];
-
-        if(!isset($_SESSION[User::SESSION]) || $_SESSION[User::SESSION] || !(int)$_SESSION[user::SESSION]["id_usuario"] > 0)
+        $sql = new Sql();
+                 
+        if(isset($_SESSION[User::SESSION]) && $_SESSION[User::SESSION] && (int)$_SESSION[user::SESSION]["id_usuario"] > 0)
         {
-            $retorno = [
-                "Nome"=> (string)$_SESSION[user::SESSION]["nome_pessoa"]
-            ];            
-            exit;
+            $results = $sql->select("call sp_retorna_dados_usuario(:id_usuario)", array(
+
+                ":id_usuario"=>(int)$_SESSION[user::SESSION]["id_usuario"]
+            ));       
+            
+            //Cria uma nova variável com o primeiro registro da consulta acima
+            $NovaArray = $results[0];
+
+            //Trata nome e sobrenome
+            $NovaArray["nome_pessoa"] = utf8_encode(mb_convert_case($results[0]["nome_pessoa"], MB_CASE_TITLE, "ISO-8859-1"));
+            $NovaArray["sobrenome_pessoa"] = utf8_encode(mb_convert_case($results[0]["sobrenome_pessoa"], MB_CASE_TITLE, "ISO-8859-1"));
+
+            return $NovaArray;            
         }
-        
-        return $retorno;
-
-
+        else
+        {
+            $results = ["nome_pessoa"=>""];            
+            return $results;   
+        }        
     }
+
+
+
 
     public static function verifyLogado()
 
@@ -305,24 +317,36 @@ class User extends Model {
     }
 
     
-
+    //Retorna os dados do usuario através do id de usuário
     public function get($id_usuario)
 
     {
-
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b ON a.idperson = b.idperson WHERE a.id_usuario = :id_usuario", array(
+        $results = $sql->select("select p.id_pessoa, p.nome_pessoa, p.sobrenome_pessoa, p.email_pessoa, p.data_cadastro, p.ativo, p.email_verificado, u.id_usuario, u.login_usuario from tb_pessoas p 
+        join tb_usuarios u on u.pessoas_id_pessoa = p.id_pessoa where id_usuario = :id_usuario", array(
 
             ":id_usuario"=>$id_usuario
 
-        ));
+        ));       
 
-        
+        $this->setData($results[0]);       
 
-        $this->setData($results[0]);
+    }
 
-        
+    private function retornaDadosUsuario($id_usuario)
+
+    {
+        $sql = new Sql();
+
+        $results = $sql->select("select p.id_pessoa, p.nome_pessoa, p.sobrenome_pessoa, p.email_pessoa, p.data_cadastro, p.ativo, p.email_verificado, u.id_usuario, u.login_usuario from tb_pessoas p 
+        join tb_usuarios u on u.pessoas_id_pessoa = p.id_pessoa where id_usuario = :id_usuario", array(
+
+            ":id_usuario"=>$id_usuario
+
+        ));       
+
+        $this->setData($results[0]);       
 
     }
 

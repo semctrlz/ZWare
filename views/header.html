@@ -19,11 +19,28 @@
             
 
 		<!-- Header -->
+
+
+
 			<header id="header">
+					
 				<a class="logo" href="/">ZWare</a>
 				<nav>					
-					<a href="/login"> Login </a> |
-					<a href="#"> Cadastro </a>
+						{if="$nome_pessoa==''"}
+						
+						<a href="/login"> Login </a> |
+						<a href="#"> Cadastro </a>						
+						
+						{else}
+						
+						<a href="#">{$nome_pessoa}</a> <a href="/admin/logout">(sair) </a> | 
+						<a href="#">Gerenciar listas </a>
+
+						{if="$permissao=='MAS'"}
+						| 
+						<a href="/admin">Admin </a>
+						{/if}
+						{/if}
 							 
 				</nav>
 			</header>		
