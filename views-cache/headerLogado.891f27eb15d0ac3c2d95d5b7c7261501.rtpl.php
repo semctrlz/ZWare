@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+<?php if(!class_exists('Rain\Tpl')){exit;}?><!DOCTYPE HTML>
 <!--
 	Industrious by TEMPLATED
 	templated.co @templatedco
@@ -21,9 +21,9 @@
 		<!-- Header -->
 			<header id="header">
 				<a class="logo" href="/">ZWare</a>
-				<nav>					
-					<a href="/login"> Login </a> |
-					<a href="#"> Cadastro </a>
-							 
+				<nav>
+						<?php echo htmlspecialchars( $Nome, ENT_COMPAT, 'UTF-8', FALSE ); ?> <a href="/admin/logout">(sair) </a> | 
+					<a href="#">Gerenciar listas </a>
+								 
 				</nav>
 			</header>		

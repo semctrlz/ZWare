@@ -8,6 +8,7 @@
 	<head>
 		<title>ZWare Solutions</title>
 		<meta charset="utf-8" />
+		<link rel="icon" href="\res/site/ico/favicon.ico">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<meta name="description" content="" />
 		<meta name="keywords" content="" />
@@ -20,9 +21,9 @@
 		<!-- Header -->
 			<header id="header">
 				<a class="logo" href="/">ZWare</a>
-				<nav>
+				<nav>					
 					<a href="/login"> Login </a> |
-					<a href="#"> Cadastro </a> | 
-					<a href="/"> Home </a> 				 
+					<a href="#"> Cadastro </a>
+							 
 				</nav>
 			</header>		

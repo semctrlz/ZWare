@@ -56,32 +56,139 @@ class User extends Model {
     }
 
     public static function verifyLogin($inadmin = true)
-
     {
-
         if(
 
             !isset($_SESSION[User::SESSION]) || 
 
             !$_SESSION[User::SESSION] || 
 
-            !(int)$_SESSION[user::SESSION]["id_usuario"] > 0 /*|| 
+            //Verifica se o usuario pode logar, caso sim, efetua o Login.
 
-            (bool)$_SESSION[user::SESSION]["inadmin"] != $inadmin
-*/
+            !(int)$_SESSION[user::SESSION]["id_usuario"] > 0 
+
             )
 
         {
 
             header("Location: /admin/login");
-
             exit;
 
         }
 
     }
 
+    public static function permissaoUsuarioMaster(){
+
+        if(
+            isset($_SESSION[User::SESSION]) &&
+
+            $_SESSION[User::SESSION] &&
+
+            (int)$_SESSION[user::SESSION]["id_usuario"] > 0
+            )
+                {
+
+                $sql = new Sql();
+
+                $results = $sql->select("select * from tb_permissoes where usuarios_id_usuario = :USUARIO and tipo_permissao = :PERMISSAO", array(
+
+                ":USUARIO"=>(int)$_SESSION[user::SESSION]["id_usuario"],
+                ":PERMISSAO"=>"MAS"          
+                ));
+
+                if(count($results) === 0)
+                    {
+                        return false;
+                        exit;
+                    }
+                    else
+                    {
+                        return true;
+                        exit;
+                    }
+            }
+            else 
+            {
+                    return false;
+                    exit;
+            }
+    }
     
+    public static function acessoAdmin(){
+        
+        if(
+            isset($_SESSION[User::SESSION]) &&
+
+            $_SESSION[User::SESSION] &&
+
+            (int)$_SESSION[user::SESSION]["id_usuario"] > 0
+            )
+                {
+
+                $sql = new Sql();
+
+                $results = $sql->select("select * from tb_permissoes where usuarios_id_usuario = :USUARIO and tipo_permissao = :PERMISSAO", array(
+
+                ":USUARIO"=>(int)$_SESSION[user::SESSION]["id_usuario"],
+                ":PERMISSAO"=>"MAS"          
+                ));
+
+                if(count($results) === 0)
+                    {
+                        header("Location: /");
+                        exit;
+                    }
+                    else
+                    {
+                        return true;
+                        exit;
+                    }
+            }
+            else 
+            {
+                header("Location: /");
+                    exit;
+            }
+    }
+
+    public static function logado()
+    {
+        if(
+            isset($_SESSION[User::SESSION]) &&
+
+            $_SESSION[User::SESSION] &&
+
+            (int)$_SESSION[user::SESSION]["id_usuario"] > 0
+        )
+        {
+            return true;
+            exit;
+        }
+        else
+        {
+            return false;
+            exit;
+        }     
+    }
+
+    public static function dadosUsuario(){
+        
+        //Se logado
+        $retorno = ["Vazio"=>"Bem vazio"];
+
+        if(!isset($_SESSION[User::SESSION]) || $_SESSION[User::SESSION] || !(int)$_SESSION[user::SESSION]["id_usuario"] > 0)
+        {
+            $retorno = [
+                "Nome"=> (string)$_SESSION[user::SESSION]["nome_pessoa"]
+            ];            
+            exit;
+        }
+        
+        return $retorno;
+
+
+    }
 
     public static function verifyLogado()
 
@@ -93,7 +200,7 @@ class User extends Model {
 
             $_SESSION[User::SESSION] &&
 
-            (int)$_SESSION[user::SESSION]["iduser"] > 0
+            (int)$_SESSION[user::SESSION]["id_usuario"] > 0
 
             )
 
@@ -123,7 +230,10 @@ class User extends Model {
 
     }
 
-    
+    public static function retornaNome(){
+        $nome = (string)$_SESSION[user::SESSION]["nome_pessoa"];
+        return utf8_encode(mb_convert_case($nome, MB_CASE_TITLE, "ISO-8859-1"));
+    }
 
     public static function logout()
 
@@ -196,15 +306,15 @@ class User extends Model {
 
     
 
-    public function get($iduser)
+    public function get($id_usuario)
 
     {
 
         $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b ON a.idperson = b.idperson WHERE a.iduser = :IDUSER", array(
+        $results = $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b ON a.idperson = b.idperson WHERE a.id_usuario = :id_usuario", array(
 
-            ":IDUSER"=>$iduser
+            ":id_usuario"=>$id_usuario
 
         ));
 
@@ -226,9 +336,9 @@ class User extends Model {
 
                         
 
-        $results = $sql->select("CALL sp_usersupdate_save(:IDUSER, :DESPERSON, :DESLOGIN, :DESPASSWORD, :DESEMAIL, :NRPHONE, :INADMIN)", array(
+        $results = $sql->select("CALL sp_usersupdate_save(:id_usuario, :DESPERSON, :DESLOGIN, :DESPASSWORD, :DESEMAIL, :NRPHONE, :INADMIN)", array(
 
-            ":IDUSER"=>$this->getiduser(),
+            ":id_usuario"=>$this->getid_usuario(),
 
             ":DESPERSON"=>$this->getdesperson(),
 
@@ -260,9 +370,9 @@ class User extends Model {
 
         
 
-        $sql->query("CALL sp_users_delete(:IDUSER)", array(
+        $sql->query("CALL sp_users_delete(:id_usuario)", array(
 
-           ":IDUSER"=>$this->getiduser()
+           ":id_usuario"=>$this->getid_usuario()
 
         ));
 
@@ -298,9 +408,9 @@ class User extends Model {
 
             
 
-            $results2 = $sql->select("CALL sp_userspasswordsrecoveries_create(:IDUSER, :DESIP)", array(
+            $results2 = $sql->select("CALL sp_userspasswordsrecoveries_create(:id_usuario, :DESIP)", array(
 
-                ":IDUSER"=>$data["iduser"],
+                ":id_usuario"=>$data["id_usuario"],
 
                 ":DESIP"=>$_SERVER["REMOTE_ADDR"]
 
@@ -362,7 +472,7 @@ class User extends Model {
 
         $results = $sql->select("SELECT * FROM tb_userspasswordsrecoveries a
 
-                    INNER JOIN tb_users b ON b.iduser = a.iduser
+                    INNER JOIN tb_users b ON b.id_usuario = a.id_usuario
 
                     INNER JOIN tb_persons c ON b.idperson = c.idperson
 
@@ -422,11 +532,11 @@ class User extends Model {
 
         $sql = new Sql();
 
-        $sql->query("UPDATE tb_users SET despassword = :PASSWORD WHERE iduser = :IDUSER", array(
+        $sql->query("UPDATE tb_users SET despassword = :PASSWORD WHERE id_usuario = :id_usuario", array(
 
             ":PASSWORD"=>User::passwordEncript($password),
 
-            ":IDUSER"=>$this->getiduser()
+            ":id_usuario"=>$this->getid_usuario()
 
         ));
 

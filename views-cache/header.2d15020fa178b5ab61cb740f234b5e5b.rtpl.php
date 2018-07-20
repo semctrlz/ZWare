@@ -245,7 +245,7 @@ desired effect
 
             <ul class="dropdown-menu">
 
-              <li class="header">You have 10 notifications</li>
+              <li class="header">{You have 10 notifications}</li>
 
               <li>
 
@@ -363,7 +363,7 @@ desired effect
 
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
 
-              <span class="hidden-xs">Alexander Pierce</span>
+              <span class="hidden-xs"><?php echo htmlspecialchars( $Nome, ENT_COMPAT, 'UTF-8', FALSE ); ?></span>
 
             </a>
 
@@ -379,7 +379,7 @@ desired effect
 
                 <p>
 
-                  Alexander Pierce - Web Developer
+                  <?php echo htmlspecialchars( $Nome, ENT_COMPAT, 'UTF-8', FALSE ); ?> - Web Developer
 
                   <small>Member since Nov. 2012</small>
 
@@ -479,7 +479,7 @@ desired effect
 
         <div class="pull-left info">
 
-          <p>Alexander Pierce</p>
+          <p><?php echo htmlspecialchars( $Nome, ENT_COMPAT, 'UTF-8', FALSE ); ?></p>
 
           <!-- Status -->
 

@@ -15,15 +15,39 @@ $app->config('debug', true);
 
 $app->get('/', function(){       
 
-    $page = new Page();    
-    $page->setTpl("index");    
+    //Verificar se Logado
+
+    if(User::logado())
+    {
+        if(User::permissaoUsuarioMaster()){
+
+            $page = new Page([     
+                "tipoHeader"=>"headerAdmin"            
+            ],["Nome"=>User::retornaNome()]);
+            }
+            else{
+                $page = new Page([     
+                    "tipoHeader"=>"headerLogado"            
+                ], ["Nome"=>User::retornaNome()]);
+            }
+        }else
+        {
+            $page = new Page();   
+        }
+     
+        $page->setTpl("index");    
     
 });
 
 $app->get('/admin(/)', function(){
     
-    User::verifyLogin();    
-    $page = new PageAdmin();
+    User::acessoAdmin();
+    User::verifyLogin();
+    $page = new PageAdmin([], [
+        
+        "Nome"=>User::retornaNome()
+        
+        ]);
     $page->setTpl("index");
     
     
@@ -31,11 +55,12 @@ $app->get('/admin(/)', function(){
 
 $app->get('/admin/login(/)', function(){    
     
-    User::verifyLogado();   
-    
+    User::acessoAdmin();
+    User::verifyLogado();
+
     $page = new PageAdmin([     
         "header"=>false,
-        "footer"=>false        
+        "footer"=>false
     ]);
     
     $page->setTpl("login"); 
@@ -43,8 +68,9 @@ $app->get('/admin/login(/)', function(){
 
 $app->post('/admin/login(/)', function(){
     
+    User::acessoAdmin();
     User::login($_POST["login"], $_POST["senha"]);
-    
+
     header("location: /admin");
     exit;    
 });
@@ -52,13 +78,12 @@ $app->post('/admin/login(/)', function(){
 $app->get('/admin/logout(/)', function(){    
     
     User::logout();
-    
-    header("Location: /admin/login");
+    header("location: /");
     exit;
 });
 
 $app->get('/admin/login(/)', function(){    
-    
+        
     User::verifyLogado();   
     
     $page = new PageAdmin([     
@@ -84,7 +109,7 @@ $app->post('/login(/)', function(){
        
     User::login($_POST["login"], $_POST["senha"]);
     
-    header("location: /admin");
+    header("location: /");
     
     exit;
 });
@@ -92,8 +117,9 @@ $app->post('/login(/)', function(){
 
 $app->get('/admin/users/create(/)', function(){    
     
+    User::acessoAdmin();
     User::verifyLogin();
-    
+
     $page = new PageAdmin();
     
     $page->setTpl("users-create");    
@@ -102,8 +128,9 @@ $app->get('/admin/users/create(/)', function(){
 
 $app->get('/admin/users/:iduser/delete(/)', function($iduser)
 {
+    User::acessoAdmin();
     User::verifyLogin();
-    
+
     $user = new User();
     $user->get((int)$iduser);
     
@@ -115,8 +142,9 @@ $app->get('/admin/users/:iduser/delete(/)', function($iduser)
 
 $app->get('/admin/users/:iduser(/)', function($iduser){    
     
+    User::acessoAdmin();
     User::verifyLogin();
-    
+
     $page = new PageAdmin();
     
     $user = new User();
@@ -131,8 +159,9 @@ $app->get('/admin/users/:iduser(/)', function($iduser){
 
 $app->post('/admin/users/create(/)', function()
 {
+    User::acessoAdmin();
     User::verifyLogin();
-    
+
     $user = new User();
     
     $_POST["inadmin"] = (isset($_POST["inadmin"]))?1:0;
@@ -148,8 +177,9 @@ $app->post('/admin/users/create(/)', function()
 
 $app->post('/admin/users/:iduser(/)', function($iduser)
 {
+    User::acessoAdmin();
     User::verifyLogin();
-    
+
     $user = new User();
     
     $_POST["inadmin"] = (isset($_POST["inadmin"]))?1:0;
