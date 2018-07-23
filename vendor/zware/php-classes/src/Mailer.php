@@ -10,6 +10,7 @@ const USERNAME = "contato@zware.com.br";
 const PASSWORD = "dbadg975";
 const NAMEFROM = "Zware";
 
+
 private $mail;
     
     public function __construct($toAddress, $toName, $subject, $tplName, $data = array()){
@@ -29,7 +30,7 @@ private $mail;
             $tpl->assign($key, $value);
         }
         
-        $html = $tpl->draw($tplName, true);
+        $html = $tpl->draw($tplName,  true);
                        
         $this->mail = new \PHPMailer();
         
@@ -40,18 +41,22 @@ private $mail;
         //0 = off
         //1 = Client message
         //2 = Client and server message
-        $this->mail->SMTPDebug = 2;
+        $this->mail->SMTPDebug = 0;
 
         $this->CharSet = 'UTF-8';
         
         //Requisita um HTML amigável para o debug
         $this->mail->Debugoutput = 'html';
         
+  
         $this->mail->Host = 'email-ssl.com.br';
         $this->mail->Port = 587;
-        $this->mail->SMTPSecure = 'tls';        
+        $this->mail->SMTPSecure = 'tsl';        
         $this->mail->SMTPAuth = true;
-        
+       
+
+
+
         $this->mail->Username = Mailer::USERNAME;
         $this->mail->Password = Mailer::PASSWORD;
         
