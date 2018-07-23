@@ -281,6 +281,82 @@ class User extends Model
         $this->setData($results[0]);
     }
 
+    public static function existeEmailUsuario($email = string)    
+    {
+        $sql = new Sql();
+
+        $retorno = $sql->select("select u.id_usuario, p.nome_pessoa, p.email_pessoa from tb_usuarios u join tb_pessoas	p on p.id_pessoa = u.pessoas_id_pessoa
+        where p.email_pessoa = :EMAIL", array(
+            ":EMAIL" => $email
+        ));
+
+        if (count($retorno) > 0) {
+
+            // Gera Hash
+            $hashEmail = hash('ripemd160', $email . time());
+
+            $link = "http://zware.com.br/recuperarSenha?code=$hashEmail";
+
+            $sql->query("INSERT INTO tb_recuperacao_senha (hash_recuperacao_senha, usuarios_id_usuario) values(:HASHEMAIL, :USUARIO);", array(
+                ":HASHEMAIL" => $hashEmail,
+                ":USUARIO" => $retorno[0]["id_usuario"]
+            ));
+
+            $mailer = new Mailer($email, User::formataNome($retorno[0]["nome_pessoa"]), "Recuperar sua senha no site ZWare", "recuperarSenha", array(
+                "name" => User::formataNome($retorno[0]["nome_pessoa"]),
+                "link" => $link
+            ));
+
+            $mailer->send();
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static function validaCodigoAlteracaoSenha($codigo = string){
+        $sql = new Sql();
+        $retorno = $sql->select("select * from tb_recuperacao_senha where hash_recuperacao_senha = :HASHEMAIL and data_criacao > subdate(current_timestamp(), interval 5 minute)", array(
+            ":HASHEMAIL"=>$codigo
+        ));
+        
+        if(count($retorno) > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    public static function idCodigoAlteracaoSenha($codigo = string){        
+        $sql = new Sql();
+        $retorno = $sql->select("select usuarios_id_usuario from tb_recuperacao_senha where hash_recuperacao_senha = :HASHEMAIL", array(
+            ":HASHEMAIL"=>$codigo
+        ));
+        
+        if(count($retorno) > 0){        
+        return (int) $retorno[0]["usuarios_id_usuario"];
+        }else{
+            return (int)0;
+        }
+    }
+    
+    public function alteraSenha($id = int, $senha = string){
+        $sql = new Sql();
+        
+        $SenhaNova = User::passwordEncript($senha);
+        
+        $sql->query("update tb_usuarios set senha_usuario = :SENHA WHERE id_usuario = :USUARIO", array(
+            ":SENHA"=>$SenhaNova,
+            ":USUARIO"=>$id
+        ));
+        
+        $sql->query("delete from tb_recuperacao_senha where usuarios_id_usuario = :USUARIO", array(            
+            ":USUARIO"=>$id
+        ));
+        
+    }
+    
     // Retorna os dados do usuario através do id de usuário
     public function get($id_usuario)
     {

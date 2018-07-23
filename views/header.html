@@ -29,31 +29,41 @@
 
 							<a href="/cadastro">Cadastro </a>
 
-						{elseif="$local=='cadastro'"}
+						{/if}
+
+
+						{if="$local=='cadastro'"}
 							
 						<a href="/login"> Login </a>
 
-						{else}
+						{/if}
 
-							{if="$nome_pessoa==''"}
+						{if="$local=='cadastro'"}
 							
-								<a href="/login"> Login </a>
+						<a href="/login"> Login </a>
 
-								{if="$local!='cadastro'"}| <a href="/cadastro">Cadastro </a>
-								{/if}						
-								
-								{else}
+						{/if}
 
-								
-								<a href="#">{$nome_pessoa}</a> <a href="/admin/logout">(sair) </a> | 
-								<a href="#">Gerenciar listas </a>
 
-								{if="$permissao=='MAS'"}
-									| 
-									<a href="/admin">Admin </a>
-								{/if}
+						{if="$nome_pessoa==''"}
+						
+							<a href="/login"> Login </a>
+
+							{if="$local!='cadastro'"}
+							| <a href="/cadastro">Cadastro </a>
+							{/if}						
+							
+						{else}
+							
+							<a href="#">{$nome_pessoa}</a> <a href="/admin/logout">(sair) </a> | 
+							<a href="#">Gerenciar listas </a>
+
+							{if="$permissao=='MAS'"}
+								| 
+								<a href="/admin">Admin </a>
 							{/if}
 						{/if}
+					
 							 
 				</nav>
 			</header>		

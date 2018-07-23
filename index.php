@@ -102,19 +102,75 @@ $app->post('/login(/)', function () {
 
 $app->get('/recuperarSenha(/)', function () {
 
+    $msg = "inicial";
+    $code = "";
+    $idUsuario = "";
+
+    if (isset($_GET["msg"])) {
+        $msg = $_GET["msg"];
+    }
+
+    if (isset($_GET["code"])) {
+        $code = $_GET["code"];
+
+        if ($code != "") {
+            // Verificar validade do codigo
+            if (User::validaCodigoAlteracaoSenha($code)) {
+                $idUsuario = User::idCodigoAlteracaoSenha($code);
+                $msg = "alteracaoLiberada";
+            } else {
+                $msg = "codigoExpirado";
+            }
+        }
+    }
+
+    $dados = array(
+        "msg" => $msg,
+        "code" => $code,
+        "nome_pessoa" => "",
+        "idUsuario"=>$idUsuario
+    );
+
     $page = new Page([
         "tipoHeader" => "header"
-    ], array(), "login");
+    ], $dados, "recuperaSenha");
 
     $page->setTpl("recuperarSenha");
     exit();
 });
 
-$app->post('/login(/)', function () {
+$app->post('/recuperarSenha(/)', function () {
 
-    User::login($_POST["login"], $_POST["senha"]);
+    $email = "";
+    $senha = "";
+    $id = "";
 
-    header("location: /");
+    if (isset($_POST["email"])) {
+        $email = $_POST["email"];
+    } else {
+        if (isset($_POST["senha"])) {
+            $senha = $_POST["senha"];
+        }
+        
+        if (isset($_POST["idUsuario"])) {
+            $id = $_POST["idUsuario"];
+        }
+        
+        if($senha!= ""){
+            $User = new User();
+            $User->alteraSenha($id, $senha);
+            header("location: /recuperarSenha?msg=alterada");
+            exit;
+        }
+        
+        
+    }
+
+    if (User::existeEmailUsuario($email)) {
+        header("location: /recuperarSenha?msg=invalidEmail");
+    } else {
+        header("location: /recuperarSenha?msg=sucesso");
+    }
 
     exit();
 });
