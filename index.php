@@ -14,6 +14,21 @@ $app->config('debug', true);
 
 $app->get('/', function () {
 
+    // Forçar HTTPS: Deixar apenas na versão Oficial
+    /*
+     * if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') {
+     * if(!headers_sent()) {
+     * header("Status: 301 Moved Permanently");
+     * header(sprintf(
+     * 'Location: https://%s%s',
+     * $_SERVER['HTTP_HOST'],
+     * $_SERVER['REQUEST_URI']
+     * ));
+     * exit();
+     * }
+     * }
+     */
+
     // Verificar se Logado
 
     $user = new User();
@@ -128,7 +143,7 @@ $app->get('/recuperarSenha(/)', function () {
         "msg" => $msg,
         "code" => $code,
         "nome_pessoa" => "",
-        "idUsuario"=>$idUsuario
+        "idUsuario" => $idUsuario
     );
 
     $page = new Page([
@@ -151,25 +166,23 @@ $app->post('/recuperarSenha(/)', function () {
         if (isset($_POST["senha"])) {
             $senha = $_POST["senha"];
         }
-        
+
         if (isset($_POST["idUsuario"])) {
             $id = $_POST["idUsuario"];
         }
-        
-        if($senha!= ""){
+
+        if ($senha != "") {
             $User = new User();
             $User->alteraSenha($id, $senha);
             header("location: /recuperarSenha?msg=alterada");
-            exit;
+            exit();
         }
-        
-        
     }
 
     if (User::existeEmailUsuario($email)) {
-        header("location: /recuperarSenha?msg=invalidEmail");
-    } else {
         header("location: /recuperarSenha?msg=sucesso");
+    } else {
+        header("location: /recuperarSenha?msg=invalidEmail");
     }
 
     exit();
@@ -333,6 +346,23 @@ $app->get('/admin/users/:iduser(/)', function ($iduser) {
     $page->setTpl("users-update", array(
         "user" => $user->getData()
     ));
+    exit();
+});
+
+$app->get('/admin/perfil(/)', function () {
+
+    User::acessoAdmin();
+    User::verifyLogin();
+
+    $user = new User();
+
+    $dados = $user->dadosUsuario();   
+
+    $dados["Nome"] = User::retornaNome();
+    
+    $page = new PageAdmin([], $dados, "perfil");
+
+    $page->setTpl("perfil");
     exit();
 });
 

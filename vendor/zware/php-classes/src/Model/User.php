@@ -217,7 +217,7 @@ class User extends Model
 
             // Envia um email de confirmação
 
-            $link = "http://zware.com.br/validacaoEmail?code=$codigoParaConfirmacao";
+            $link = "https://zware.com.br/validacaoEmail?code=$codigoParaConfirmacao";
 
             $mailer = new Mailer($this->getemail(), $this->getnome(), "Verifique seu e-mail no site ZWare", "verificacao", array(
                 "name" => User::formataNome($this->getnome()),
@@ -450,7 +450,7 @@ class User extends Model
 
                 $code = base64_encode(openssl_encrypt($dataRecovery["idrecovery"], User::METHOD, User::CRIPTKEY, false, User::IV));
 
-                $link = "https://zware.websiteseguro.com/admin/forgot/reset?code=$code";
+                $link = "https://zware.com.br/admin/forgot/reset?code=$code";
 
                 $mailer = new Mailer($data["desemail"], $data["desperson"], "Redefinir senha do site ZWare", "forgot", array(
 

@@ -29,31 +29,41 @@
 
 							<a href="/cadastro">Cadastro </a>
 
-						<?php }elseif( $local=='cadastro' ){ ?>
+						<?php } ?>
+
+
+						<?php if( $local=='cadastro' ){ ?>
 							
 						<a href="/login"> Login </a>
 
-						<?php }else{ ?>
+						<?php } ?>
 
-							<?php if( $nome_pessoa=='' ){ ?>
+						<?php if( $local=='cadastro' ){ ?>
 							
-								<a href="/login"> Login </a>
+						<a href="/login"> Login </a>
 
-								<?php if( $local!='cadastro' ){ ?>| <a href="/cadastro">Cadastro </a>
-								<?php } ?>						
-								
-								<?php }else{ ?>
+						<?php } ?>
 
-								
-								<a href="#"><?php echo htmlspecialchars( $nome_pessoa, ENT_COMPAT, 'UTF-8', FALSE ); ?></a> <a href="/admin/logout">(sair) </a> | 
-								<a href="#">Gerenciar listas </a>
 
-								<?php if( $permissao=='MAS' ){ ?>
-									| 
-									<a href="/admin">Admin </a>
-								<?php } ?>
+						<?php if( $nome_pessoa=='' ){ ?>
+						
+							<a href="/login"> Login </a>
+
+							<?php if( $local!='cadastro' ){ ?>
+							| <a href="/cadastro">Cadastro </a>
+							<?php } ?>						
+							
+						<?php }else{ ?>
+							
+							<a href="#"><?php echo htmlspecialchars( $nome_pessoa, ENT_COMPAT, 'UTF-8', FALSE ); ?></a> <a href="/admin/logout">(sair) </a> | 
+							<a href="#">Gerenciar listas </a>
+
+							<?php if( $permissao=='MAS' ){ ?>
+								| 
+								<a href="/admin">Admin </a>
 							<?php } ?>
 						<?php } ?>
+					
 							 
 				</nav>
 			</header>		
