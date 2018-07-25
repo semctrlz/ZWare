@@ -1,10 +1,6 @@
-<?php 
-
-
+<?php
 
 namespace ZWare;
-
-
 
 use Rain\Tpl;
 

@@ -1,4 +1,6 @@
-<?php if(!class_exists('Rain\Tpl')){exit;}?>		<!-- Highlights -->
+<?php if(!class_exists('Rain\Tpl')){exit;}?>
+
+		<!-- Highlights -->
 		<section class="wrapper menor">	
 				<div class="inner">
 					<header class="special">
@@ -45,12 +47,10 @@
 								<input type="date" name="nascimento" value ="<?php echo htmlspecialchars( $nascimento, ENT_COMPAT, 'UTF-8', FALSE ); ?>" id="nascimento" placeholder="Data de nascimento"/><p></p>	
 								
 								<?php if( $erro=='emailExistente' ){ ?>
-
 								<div class="alert alert-danger">
 									<strong>Aviso!</strong> Já um cadastro com esse email, <a href="#">Recuperar sua senha?</a>.
 								</div>
 								<?php } ?>
-
 
 								<input type="email" name="email" id="email" value="" placeholder="Email" required/><p></p>							
 
@@ -97,3 +97,6 @@
 
 			</div>
 		</section>
+
+		
+

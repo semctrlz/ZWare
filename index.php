@@ -15,9 +15,7 @@ $app->config ( 'debug', true );
 $app->get ( '/', function () {
 
 	if ($_SERVER ['REMOTE_ADDR'] != "127.0.0.1") {
-
-		// For�ar HTTPS: Deixar apenas na vers�o Oficial
-
+		
 		if (! isset ( $_SERVER ['HTTPS'] ) || $_SERVER ['HTTPS'] !== 'on') {
 			if (! headers_sent ()) {
 				header ( "Status: 301 Moved Permanently" );
