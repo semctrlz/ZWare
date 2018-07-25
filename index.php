@@ -29,15 +29,12 @@ $app->get ( '/', function () {
 	 * }
 	 */
 
-	
-	
-	
 	// Verificar se Logado
-	
+
 	$user = new User ();
-	$user->loadCookie();
-	$dados = $user->dadosUsuario();	
-	
+	$user->loadCookie ();
+	$dados = $user->dadosUsuario ();
+
 	$page = new Page ( [ 
 			"tipoHeader" => "header"
 	], $dados );
@@ -49,10 +46,10 @@ $app->get ( '/admin(/)', function () {
 
 	User::acessoAdmin ();
 	User::verifyLogin ();
-	
-	$user = new User();
-	$dados = $user->dadosUsuario();	
-	
+
+	$user = new User ();
+	$dados = $user->dadosUsuario ();
+
 	$page = new PageAdmin ( [ ], $dados, "main" );
 	$page->setTpl ( "index" );
 } );
@@ -119,9 +116,9 @@ $app->post ( '/login(/)', function () {
 	} else {
 		$conexaoAutomatica = false;
 	}
-	
+
 	User::login ( $_POST ["login"], $_POST ["senha"], $conexaoAutomatica );
-	
+
 	header ( "location: /" );
 	exit ();
 } );
@@ -310,9 +307,9 @@ $app->get ( '/admin/users(/)', function () {
 	User::acessoAdmin ();
 	User::verifyLogin ();
 
-	$user = new User();
-	$dados = $user->dadosUsuario();	
-	
+	$user = new User ();
+	$dados = $user->dadosUsuario ();
+
 	$page = new PageAdmin ( [ ], $dados, "usuarios" );
 
 	$page->setTpl ( "users" );
@@ -323,8 +320,8 @@ $app->get ( '/admin/users/create(/)', function () {
 
 	User::acessoAdmin ();
 	User::verifyLogin ();
-	$user = new User();
-	$dados = $user->dadosUsuario();	
+	$user = new User ();
+	$dados = $user->dadosUsuario ();
 	$page = new PageAdmin ( [ ], $dados, "usuarios" );
 
 	$page->setTpl ( "users-create" );
@@ -368,7 +365,7 @@ $app->get ( '/admin/perfil(/)', function () {
 
 	$user = new User ();
 
-	$dados = $user->dadosUsuario ();	
+	$dados = $user->dadosUsuario ();
 
 	$page = new PageAdmin ( [ ], $dados, "perfil" );
 

@@ -100,30 +100,26 @@ class User extends Model {
 
 					":CHAVE" => $_COOKIE [$cookie_name]
 			) );
-    		
-    		
-    		
-    		if (COUNT ( $idsUsuario ) > 0) {
+
+			if (COUNT ( $idsUsuario ) > 0) {
 				$results = $sql->select ( "select * from tb_usuarios u join tb_pessoas p on p.id_pessoa = u.pessoas_id_pessoa where u.id_usuario = :USUARIO", array (
 
 						":USUARIO" => $idsUsuario [0] ["usuarios_id_usuario"]
 				) );
 
 				if (count ( $results ) > 0) {
-					
-					
+
 					$NovaArray = $results [0];
-					
+
 					// Trata nome e sobrenome
 					$NovaArray ["nome_pessoa"] = utf8_encode ( mb_convert_case ( $results [0] ["nome_pessoa"], MB_CASE_TITLE, "ISO-8859-1" ) );
 					$NovaArray ["sobrenome_pessoa"] = utf8_encode ( mb_convert_case ( $results [0] ["sobrenome_pessoa"], MB_CASE_TITLE, "ISO-8859-1" ) );
-					
+
 					$this->setData ( $NovaArray );
-					
+
 					$_SESSION [User::SESSION] = $NovaArray;
-					
-					return $NovaArray;		
-					
+
+					return $NovaArray;
 				}
 			}
 		}
@@ -209,7 +205,7 @@ class User extends Model {
 			// Trata nome e sobrenome
 			$NovaArray ["nome_pessoa"] = utf8_encode ( mb_convert_case ( $results [0] ["nome_pessoa"], MB_CASE_TITLE, "ISO-8859-1" ) );
 			$NovaArray ["sobrenome_pessoa"] = utf8_encode ( mb_convert_case ( $results [0] ["sobrenome_pessoa"], MB_CASE_TITLE, "ISO-8859-1" ) );
-			
+
 			return $NovaArray;
 		} else {
 			$results = [ 
