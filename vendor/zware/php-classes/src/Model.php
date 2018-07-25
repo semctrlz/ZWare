@@ -36,7 +36,11 @@ class Model
         return $this->values;
     }
 
+<<<<<<< HEAD
     public static function formataTexto($texto = string, $maiusculas = bool, $trim = bool, $removeInvalidChars = bool, $utfDecode = bool)
+=======
+    public static function formataTexto($texto = string, $maiusculas = bool, $trim = bool, $removeInvalidChars = bool)
+>>>>>>> ada7e190bba4be36931f8d82080802f68cf30bec
     {
         $textoRetorno = $texto;
 
@@ -54,6 +58,7 @@ class Model
             $textoRetorno = str_replace($invalidChars, "", $textoRetorno);
         }
 
+<<<<<<< HEAD
         if($utfDecode == true){
         $textoRetorno = utf8_decode($textoRetorno);
         }
@@ -148,6 +153,11 @@ class Model
     			'pattern'    => $pattern
     	);
     } 
+=======
+        return utf8_decode($textoRetorno);
+    }
+        
+>>>>>>> ada7e190bba4be36931f8d82080802f68cf30bec
 }
 
 ?>

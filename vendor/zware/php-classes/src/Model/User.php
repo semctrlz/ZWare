@@ -2,10 +2,12 @@
 
 namespace ZWare\Model;
 
+
 use ZWare\DB\Sql;
 use ZWare\Model;
 use ZWare\Mailer;
 
+<<<<<<< HEAD
 ini_set ( 'default_charset', 'UTF-8' );
 class User extends Model {
 	const SESSION = "User";
@@ -19,6 +21,86 @@ class User extends Model {
 
 				":USUARIO" => $login
 		) );
+=======
+ini_set('default_charset', 'UTF-8');
+
+class User extends Model
+{
+
+    const SESSION = "User";
+
+    const IV = 'Js2hS50bvoNDa51m';
+
+    const CRIPTKEY = 'ALG5Vg68wmgose71';
+
+    const METHOD = 'aes-256-cbc';
+
+    public static function login($login, $senha)
+    {
+        $sql = new Sql();
+
+        $results = $sql->select("select * from tb_usuarios u join tb_pessoas p on p.id_pessoa = u.pessoas_id_pessoa where u.login_usuario = :USUARIO or p.email_pessoa = :USUARIO", array(
+
+            ":USUARIO" => $login
+        ));
+
+        if (count($results) === 0) {
+            throw new \Exception("Usuário não encontrado ou senha inválida.");
+        }
+
+        $data = $results[0];
+
+        if (password_verify($senha, $data["senha_usuario"]) === true) {
+            $user = new User();
+
+            $user->setData($data);
+
+            $_SESSION[User::SESSION] = $user->getData();
+
+            return $user;
+        } else {
+            throw new \Exception("Usuário não encontrado ou senha inválida.");
+        }
+    }
+
+    public static function verifyLogin($inadmin = true)
+    {
+        if (! isset($_SESSION[User::SESSION]) || ! $_SESSION[User::SESSION] || 
+
+        // Verifica se o usuario pode logar, caso sim, efetua o Login.
+
+        ! (int) $_SESSION[user::SESSION]["id_usuario"] > 0) {
+
+            header("Location: /admin/login");
+            exit();
+        }
+    }
+
+    public static function permissaoUsuarioMaster()
+    {
+        if (isset($_SESSION[User::SESSION]) && $_SESSION[User::SESSION] && (int) $_SESSION[user::SESSION]["id_usuario"] > 0) {
+
+            $sql = new Sql();
+
+            $results = $sql->select("select * from tb_permissoes where usuarios_id_usuario = :USUARIO and tipo_permissao = :PERMISSAO", array(
+
+                ":USUARIO" => (int) $_SESSION[user::SESSION]["id_usuario"],
+                ":PERMISSAO" => "MAS"
+            ));
+
+            if (count($results) === 0) {
+                return false;
+                exit();
+            } else {
+                return true;
+                exit();
+            }
+        } else {
+            return false;
+            exit();
+        }
+    }
+>>>>>>> ada7e190bba4be36931f8d82080802f68cf30bec
 
 		if (count ( $results ) === 0) {
 			throw new \Exception ( "Usuário não encontrado ou senha inválida." );
@@ -463,6 +545,7 @@ class User extends Model {
 
 			$mailer->send ();
 
+<<<<<<< HEAD
 			return true;
 		} else {
 			return false;
@@ -496,6 +579,70 @@ class User extends Model {
 		$sql = new Sql ();
 
 		$SenhaNova = User::passwordEncript ( $senha );
+=======
+            // Cria uma nova variável com o primeiro registro da consulta acima
+            $NovaArray = $results[0];
+
+            // Trata nome e sobrenome
+            $NovaArray["nome_pessoa"] = utf8_encode(mb_convert_case($results[0]["nome_pessoa"], MB_CASE_TITLE, "ISO-8859-1"));
+            $NovaArray["sobrenome_pessoa"] = utf8_encode(mb_convert_case($results[0]["sobrenome_pessoa"], MB_CASE_TITLE, "ISO-8859-1"));
+
+            return $NovaArray;
+        } else {
+            $results = [
+                "nome_pessoa" => ""
+            ];
+            return $results;
+        }
+    }
+
+    public static function verifyLogado()
+    {
+        if (isset($_SESSION[User::SESSION]) && $_SESSION[User::SESSION] && (int) $_SESSION[user::SESSION]["id_usuario"] > 0) {
+
+            if ((bool) $_SESSION[user::SESSION]["inadmin"] === true) {
+
+                header("Location: /admin");
+
+                exit();
+            } else {
+
+                header("Location: /");
+
+                exit();
+            }
+        }
+    }
+
+    public static function retornaNome()
+    {
+        $nome = (string) $_SESSION[user::SESSION]["nome_pessoa"];         
+    }
+
+    public static function logout()
+    {
+        $_SESSION[User::SESSION] = NULL;
+    }
+        
+    public static function formataNome($nome = string)
+    {
+        $texto = ucwords ($nome);
+        return User::adjustments($nome);
+    }
+    
+    public static function adjustments( $text = string)
+    {
+        $accents = array("á", "à", "â", "ã", "ä", "é", "è", "ê", "ë", "í", "ì", "î", "ï", "ó", "ò", "ô", "õ", "ö", "ú", "ù", "û", "ü", "ç", "Á", "À", "Â", "Ã", "Ä", "É", "È", "Ê", "Ë", "Í", "Ì", "Î", "Ï", "Ó", "Ò", "Ô", "Õ", "Ö", "Ú", "Ù", "Û", "Ü", "Ç");        
+        $utf8 = array("&aacute;", "&agrave;", "&acirc;", "&atilde;", "&auml;", "&eacute;", "&egrave;", "&ecirc;", "&euml;", "&iacute;", "&igrave;", "&icirc;", "&iuml;","&oacute;", "&ograve;", "&ocirc;", "&otilde", "&ouml;","&uacute;", "&ugrave;", "&ucirc;", "&uuml;", "&ccedil;", 
+                      "&Aacute;", "&Agrave;", "&Acirc;", "&Atilde;", "&Auml;", "&Eacute;", "&Egrave;", "&Ecirc;", "&Euml;", "&Iacute;", "&Igrave;", "&Icirc;", "&Iuml;","&Oacute;", "&Ograve;", "&Ocirc;", "&Otilde", "&Ouml;","&Uacute;", "&Ugrave;", "&Ucirc;", "&Uuml;", "&Ccedil;");
+        return str_replace($accents, $utf8, $text);        
+    }    
+    
+    public function cadastraUsuario()
+    {
+        // Verifica se o email de usuario ja existe, caso sim, retorna a pagina com um alerta
+        $sql = new sql();
+>>>>>>> ada7e190bba4be36931f8d82080802f68cf30bec
 
 		$sql->query ( "update tb_usuarios set senha_usuario = :SENHA WHERE id_usuario = :USUARIO", array (
 				":SENHA" => $SenhaNova,
@@ -522,11 +669,27 @@ class User extends Model {
 	private function retornaDadosUsuario($id_usuario) {
 		$sql = new Sql ();
 
+<<<<<<< HEAD
 		$results = $sql->select ( "select p.id_pessoa, p.nome_pessoa, p.sobrenome_pessoa, p.email_pessoa, p.data_cadastro, p.ativo, p.email_verificado, u.id_usuario, u.login_usuario from tb_pessoas p 
         join tb_usuarios u on u.pessoas_id_pessoa = p.id_pessoa where id_usuario = :id_usuario", array (
 
 				":id_usuario" => $id_usuario
 		) );
+=======
+            // Cria usuario sem link de pessoa            
+            
+            $sql->select("CALL sp_cadastra_usuario_comum(:HASH, :NOME, :SOBRENOME, :EMAIL, :CELULAR, :FONE, :SEXO, :NASCIMENTO, :SENHA);", array(
+                ":HASH" => $codigoParaConfirmacao,
+                ":NOME" => User::formataTexto($this->getnome(), true, true, true),
+                ":SOBRENOME" => User::formataTexto($this->getsobrenome(), true, true, true),
+                ":EMAIL" => User::formataTexto($this->getemail(), false, true, true),
+                ":CELULAR" => $this->getcelular(),
+                ":FONE" => $this->getfone(),
+                ":SEXO" => $this->getsexo(),
+                ":NASCIMENTO" => $this->getnascimento(),
+                ":SENHA" => $senhaSegura
+            ));
+>>>>>>> ada7e190bba4be36931f8d82080802f68cf30bec
 
 		$this->setData ( $results [0] );
 	}
@@ -535,6 +698,7 @@ class User extends Model {
 
 		$results = $sql->select ( "CALL sp_usersupdate_save(:id_usuario, :DESPERSON, :DESLOGIN, :DESPASSWORD, :DESEMAIL, :NRPHONE, :INADMIN)", array (
 
+<<<<<<< HEAD
 				":id_usuario" => $this->getid_usuario (),
 
 				":DESPERSON" => $this->getdesperson (),
@@ -542,6 +706,32 @@ class User extends Model {
 				":DESLOGIN" => $this->getdeslogin (),
 
 				":DESPASSWORD" => User::passwordEncript ( $this->getdespassword () ),
+=======
+            $mailer = new Mailer($this->getemail(), $this->getnome(), "Verifique seu e-mail no site ZWare", "Modelo", array(
+                "name" => User::formataNome($this->getnome()),
+                "link" => $link,
+                "tipo"=>"verificacao"
+            ));           
+            
+            
+            $mailer->send();           
+            
+            // Preenche array com os dados informados
+            $dados = array(
+                "nome_pessoa" => User::formataTexto($this->getnome(), true, true, true),
+                "sobrenome_pessoa" => User::formataTexto($this->getsobrenome(), true, true, true),
+                "email_pessoa" => $this->getemail(),
+                "celular" => $this->getcelular(),
+                "fone" => $this->getfone(),
+                "erro" => "emailValido"
+            );
+
+            
+            
+            return $dados;
+        }
+    }
+>>>>>>> ada7e190bba4be36931f8d82080802f68cf30bec
 
 				":DESEMAIL" => $this->getdesemail (),
 
