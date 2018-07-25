@@ -14,6 +14,7 @@ $app->config ( 'debug', true );
 
 $app->get ( '/', function () {
 
+    
 	if ($_SERVER ['REMOTE_ADDR'] != "127.0.0.1") {
 		
 		if (! isset ( $_SERVER ['HTTPS'] ) || $_SERVER ['HTTPS'] !== 'on') {
