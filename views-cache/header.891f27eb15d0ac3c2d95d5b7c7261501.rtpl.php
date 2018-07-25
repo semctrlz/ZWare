@@ -1,4 +1,6 @@
-<?php if(!class_exists('Rain\Tpl')){exit;}?><!DOCTYPE HTML>
+<?php if(!class_exists('Rain\Tpl')){exit;}?>
+
+<!DOCTYPE HTML>
 <!--
 	Industrious by TEMPLATED
 	templated.co @templatedco
@@ -27,43 +29,56 @@
 
 						<?php if( $local=='login' ){ ?>
 
+
 							<a href="/cadastro">Cadastro </a>
 
 						<?php } ?>
 
 
+
 						<?php if( $local=='cadastro' ){ ?>
+
 							
 						<a href="/login"> Login </a>
 
 						<?php } ?>
 
+
 						<?php if( $local=='cadastro' ){ ?>
+
 							
 						<a href="/login"> Login </a>
 
 						<?php } ?>
+
 
 
 						<?php if( $nome_pessoa=='' ){ ?>
+
 						
 							<a href="/login"> Login </a>
 
 							<?php if( $local!='cadastro' ){ ?>
+
 							| <a href="/cadastro">Cadastro </a>
 							<?php } ?>						
 							
 						<?php }else{ ?>
+
 							
 							<a href="#"><?php echo htmlspecialchars( $nome_pessoa, ENT_COMPAT, 'UTF-8', FALSE ); ?></a> <a href="/admin/logout">(sair) </a> | 
 							<a href="#">Gerenciar listas </a>
 
 							<?php if( $permissao=='MAS' ){ ?>
+
 								| 
 								<a href="/admin">Admin </a>
 							<?php } ?>
+
 						<?php } ?>
+
 					
 							 
 				</nav>
+
 			</header>		

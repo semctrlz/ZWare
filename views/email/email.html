@@ -203,7 +203,7 @@ div, p, ul, h1 {
 																			</tbody>
 																		</table>
 																	</div>						
-
+{if="$tipo=='verificacao'"}
 <!-- =========================================== Inicio da verificação de e-mail =========================================== -->	
 															
 																	<div class="movableContent"
@@ -265,7 +265,7 @@ div, p, ul, h1 {
 																								<div
 																									class="contentEditableContainer contentTextEditable">
 																									<div class="contentEditable" align='center'>
-																										<a href="{$link}" class='link2' style='color: #ffffff;'>Ative sua conta</a>
+																										<a target='_blank' href="{$link}" class='link2' style='color: #ffffff;'>Ative sua conta</a>
 																									</div>
 																								</div>
 																							</td>
@@ -284,7 +284,7 @@ div, p, ul, h1 {
 																	
 																	
 <!-- =========================================== Fim da verificação de e-mail =========================================== -->																			
-
+{/if}
 																	
 																	
 																<!-- Inicio do FOoter -->

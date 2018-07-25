@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
     "version": "0.2.0",
     "configurations": [
@@ -23,4 +24,31 @@
             "port": 9000
         }
     ]
+=======
+{
+    "version": "0.2.0",
+    "configurations": [
+    {
+        "type": "chrome",
+        "request": "launch",
+        "name": "Launch Chrome",
+        "url": "http://www.zwarelocal.com.br/",
+        "webRoot": "${workspaceFolder}"
+    },
+        {
+            "name": "Listen for XDebug",
+            "type": "php",
+            "request": "launch",
+            "port": 9000
+        },
+        {
+            "name": "Launch currently open script",
+            "type": "php",
+            "request": "launch",
+            "program": "${file}",
+            "cwd": "${fileDirname}",
+            "port": 9000
+        }
+    ]
+>>>>>>> 49adfcc07c4d6884dc4b28ea00bfc3120e59a27b
 }

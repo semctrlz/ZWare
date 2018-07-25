@@ -24,46 +24,21 @@
 					
 				<a class="logo" href="/">ZWare</a>
 				<nav>					
-
-						{if="$local=='login'"}
-
-							<a href="/cadastro">Cadastro </a>
-
-						{/if}
-
-
-						{if="$local=='cadastro'"}
-							
-						<a href="/login"> Login </a>
-
-						{/if}
-
-						{if="$local=='cadastro'"}
-							
-						<a href="/login"> Login </a>
-
-						{/if}
-
-
 						{if="$nome_pessoa==''"}
 						
-							<a href="/login"> Login </a>
-
-							{if="$local!='cadastro'"}
-							| <a href="/cadastro">Cadastro </a>
-							{/if}						
-							
+						<a href="/login"> Login </a>
+						{if="$local!='cadastro'"}| <a href="/cadastro">Cadastro </a>{/if}						
+						
 						{else}
-							
-							<a href="#">{$nome_pessoa}</a> <a href="/admin/logout">(sair) </a> | 
-							<a href="#">Gerenciar listas </a>
+						
+						<a href="#">{$nome_pessoa}</a> <a href="/admin/logout">(sair) </a> | 
+						<a href="#">Gerenciar listas </a>
 
-							{if="$permissao=='MAS'"}
-								| 
-								<a href="/admin">Admin </a>
-							{/if}
+						{if="$permissao=='MAS'"}
+						| 
+						<a href="/admin">Admin </a>
 						{/if}
-					
+						{/if}
 							 
 				</nav>
 			</header>		

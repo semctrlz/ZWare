@@ -560,4 +560,3 @@ desired effect
     <!-- /.sidebar -->
 
   </aside>
-

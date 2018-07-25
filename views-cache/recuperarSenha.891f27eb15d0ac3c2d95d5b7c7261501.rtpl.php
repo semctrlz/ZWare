@@ -7,28 +7,32 @@
 
 			<!-- Abre alteracao liberada -->
 			<?php if( $msg=='alteracaoLiberada' ){ ?>
+
 			<h2>REDEFINA SUA SENHA</h2>
 			<p>Digite a nova senha nos campos abaixo para alter&aacute;-la.</p>
 			<?php } ?> <?php if( $msg=='alterada' ){ ?>
+
 			<h2>RECUPERAR SENHA</h2>
 			<?php } ?> <?php if( $msg=='inicial' ){ ?>
+
 			<h2>RECUPERAR SENHA</h2>
 			<p>Digite seu e-mail no campo abaixo que lhe enviaremos
 				instru&ccedil;&otilde;es.</p>
 			<?php } ?>
 
 
+
 			<form method="post" action="/recuperarSenha">
 				<div class="row gtr-uniform">
 					<div class="col-4 col-12-small">
-						<!-- Espaçador -->
+						<!-- Espaï¿½ador -->
 
 					</div>
 
 					<div class="col-4 col-12-small">
 
 
-						<!-- Caso possa ser feita a alteração de senha -->
+						<!-- Caso possa ser feita a alteraï¿½ï¿½o de senha -->
 						<?php if( $msg=='alteracaoLiberada' ){ ?> <input type="password"
 							name="senha" id="senha" value="" placeholder="Senha" required />
 						<p></p>
@@ -63,11 +67,13 @@
 						</script>
 
 						<?php } ?> <?php if( $msg=='alterada' ){ ?>
+
 						<div class="alert alert-success">
 							<strong>Aviso!</strong> Sua senha foi alterada com sucesso. Agora voc&ecirc; pode us&aacute;-la para se conectar. Fa&ccedil;a <a href="/login">login</a> agora.
 						</div>
 						<?php } ?> 
 						<?php if( $msg=='sucesso' ){ ?>
+
 						
 						<div class="alert alert-success">
 							<strong>Aviso!</strong> Sucesso! Um email foi enviado a
@@ -75,11 +81,13 @@
 						</div>
 
 						<?php } ?> <?php if( $msg=='invalidEmail' ){ ?>
+
 						<div class="alert alert-danger">
 							<strong>Aviso!</strong> Este e-mail n&atilde;o existe em nossos
 							registros. <a href="/cadastro">Cadastrar-se?</a>.
 						</div>
 						<?php } ?> <?php if( $msg=='codigoExpirado' ){ ?>
+
 						<div class="alert alert-danger">
 							<strong>Aviso!</strong> Sua chave de recupera&ccedil;&atilde;o de
 							senha expirou, gere uma nova clicando em <a
@@ -92,9 +100,10 @@
 
 						<?php } ?>
 
+
 					</div>
 					<div class="col-4 col-12-xsmall">
-						<!-- Espaçador -->
+						<!-- Espaï¿½ador -->
 					</div>
 				</div>
 			</form>
@@ -103,6 +112,3 @@
 		</header>
 	</div>
 </section>
-
-
-

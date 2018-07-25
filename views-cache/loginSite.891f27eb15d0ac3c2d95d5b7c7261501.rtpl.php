@@ -41,7 +41,5 @@
 						
 					</header>			
 			</div>
-		</section>
-
-		
+		</section>		
 
