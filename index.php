@@ -26,6 +26,7 @@ $app->get ( '/', function () {
 		}
 	}
 	// Verificar se Logado
+	
 
 	$user = new User ();
 	$user->loadCookie ();
