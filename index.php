@@ -195,6 +195,7 @@ $app->post ( '/recuperarSenha(/)', function () {
 	exit ();
 } );
 
+
 $app->get ( '/cadastro(/)', function () {
 
 	$user = new User ();
