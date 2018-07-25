@@ -14,7 +14,7 @@ $app->config('debug', true);
 
 $app->get('/', function () {
 
-    // Forçar HTTPS: Deixar apenas na versão Oficial
+    // Forï¿½ar HTTPS: Deixar apenas na versï¿½o Oficial
     /*
      * if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') {
      * if(!headers_sent()) {
@@ -240,15 +240,19 @@ $app->get('/cadastro(/)', function () {
 $app->post('/cadastro(/)', function () {
 
     $user = new User();
-    $user->setData($_POST);
-    $dados = $user->cadastraUsuario();
+    $user->setData($_POST);    
+    
+    $dados = $user->cadastraUsuario();    
+    
+    
     if (isset($dados)) {
-        header("location: /confirmacaoEnvioEmail");
+        
+        header("location: /confirmacaoEnvioEmail");        
     } else {
+        
         $user->setData($_POST);
         header("location: /cadastro?erro=emailExistente&nome=" . $user->getnome() . "&sobrenome=" . $user->getsobrenome() . "&celular=" . $user->getcelular() . "&fone=" . $user->getfone() . "&sexo=" . $user->getsexo() . "&nascimento=" . $user->getnascimento());
     }
-
     exit();
 });
 

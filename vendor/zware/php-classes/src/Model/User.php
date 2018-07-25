@@ -1,9 +1,13 @@
 <?php
+
 namespace ZWare\Model;
+
 
 use ZWare\DB\Sql;
 use ZWare\Model;
 use ZWare\Mailer;
+
+ini_set('default_charset', 'UTF-8');
 
 class User extends Model
 {
@@ -162,25 +166,32 @@ class User extends Model
         }
     }
 
-    public static function formataNome($nome = string)
-    {
-        return utf8_encode(mb_convert_case($nome, MB_CASE_TITLE, "ISO-8859-1"));
-    }
-
     public static function retornaNome()
     {
-        $nome = (string) $_SESSION[user::SESSION]["nome_pessoa"];
-        return utf8_encode(mb_convert_case($nome, MB_CASE_TITLE, "ISO-8859-1"));
+        $nome = (string) $_SESSION[user::SESSION]["nome_pessoa"];         
     }
 
     public static function logout()
     {
         $_SESSION[User::SESSION] = NULL;
     }
-
+        
+    public static function formataNome($nome = string)
+    {
+        $texto = ucwords ($nome);
+        return User::adjustments($nome);
+    }
+    
+    public static function adjustments( $text = string)
+    {
+        $accents = array("á", "à", "â", "ã", "ä", "é", "è", "ê", "ë", "í", "ì", "î", "ï", "ó", "ò", "ô", "õ", "ö", "ú", "ù", "û", "ü", "ç", "Á", "À", "Â", "Ã", "Ä", "É", "È", "Ê", "Ë", "Í", "Ì", "Î", "Ï", "Ó", "Ò", "Ô", "Õ", "Ö", "Ú", "Ù", "Û", "Ü", "Ç");        
+        $utf8 = array("&aacute;", "&agrave;", "&acirc;", "&atilde;", "&auml;", "&eacute;", "&egrave;", "&ecirc;", "&euml;", "&iacute;", "&igrave;", "&icirc;", "&iuml;","&oacute;", "&ograve;", "&ocirc;", "&otilde", "&ouml;","&uacute;", "&ugrave;", "&ucirc;", "&uuml;", "&ccedil;", 
+                      "&Aacute;", "&Agrave;", "&Acirc;", "&Atilde;", "&Auml;", "&Eacute;", "&Egrave;", "&Ecirc;", "&Euml;", "&Iacute;", "&Igrave;", "&Icirc;", "&Iuml;","&Oacute;", "&Ograve;", "&Ocirc;", "&Otilde", "&Ouml;","&Uacute;", "&Ugrave;", "&Ucirc;", "&Uuml;", "&Ccedil;");
+        return str_replace($accents, $utf8, $text);        
+    }    
+    
     public function cadastraUsuario()
     {
-
         // Verifica se o email de usuario ja existe, caso sim, retorna a pagina com um alerta
         $sql = new sql();
 
@@ -201,13 +212,13 @@ class User extends Model
         } else {
             // Não existe outro usuario com este email
 
-            // Cria usuario sem link de pessoa
-
+            // Cria usuario sem link de pessoa            
+            
             $sql->select("CALL sp_cadastra_usuario_comum(:HASH, :NOME, :SOBRENOME, :EMAIL, :CELULAR, :FONE, :SEXO, :NASCIMENTO, :SENHA);", array(
                 ":HASH" => $codigoParaConfirmacao,
                 ":NOME" => User::formataTexto($this->getnome(), true, true, true),
                 ":SOBRENOME" => User::formataTexto($this->getsobrenome(), true, true, true),
-                ":EMAIL" => $this->getemail(),
+                ":EMAIL" => User::formataTexto($this->getemail(), false, true, true),
                 ":CELULAR" => $this->getcelular(),
                 ":FONE" => $this->getfone(),
                 ":SEXO" => $this->getsexo(),
@@ -219,13 +230,15 @@ class User extends Model
 
             $link = "https://zware.com.br/validacaoEmail?code=$codigoParaConfirmacao";
 
-            $mailer = new Mailer($this->getemail(), $this->getnome(), "Verifique seu e-mail no site ZWare", "verificacao", array(
+            $mailer = new Mailer($this->getemail(), $this->getnome(), "Verifique seu e-mail no site ZWare", "Modelo", array(
                 "name" => User::formataNome($this->getnome()),
-                "link" => $link
-            ));
-
-            $mailer->send();
-
+                "link" => $link,
+                "tipo"=>"verificacao"
+            ));           
+            
+            
+            $mailer->send();           
+            
             // Preenche array com os dados informados
             $dados = array(
                 "nome_pessoa" => User::formataTexto($this->getnome(), true, true, true),
@@ -236,6 +249,8 @@ class User extends Model
                 "erro" => "emailValido"
             );
 
+            
+            
             return $dados;
         }
     }
