@@ -1,5 +1,5 @@
 <?php
-session_start();
+session_start ();
 
 require_once ("vendor/autoload.php");
 
@@ -8,458 +8,468 @@ use ZWare\Page;
 use ZWare\PageAdmin;
 use ZWare\Model\User;
 
-$app = new Slim();
+$app = new Slim ();
 
-$app->config('debug', true);
+$app->config ( 'debug', true );
 
-$app->get('/', function () {
+$app->get ( '/', function () {
 
-    // For�ar HTTPS: Deixar apenas na vers�o Oficial
-    /*
-     * if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') {
-     * if(!headers_sent()) {
-     * header("Status: 301 Moved Permanently");
-     * header(sprintf(
-     * 'Location: https://%s%s',
-     * $_SERVER['HTTP_HOST'],
-     * $_SERVER['REQUEST_URI']
-     * ));
-     * exit();
-     * }
-     * }
-     */
+	// For�ar HTTPS: Deixar apenas na vers�o Oficial
+	/*
+	 * if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') {
+	 * if(!headers_sent()) {
+	 * header("Status: 301 Moved Permanently");
+	 * header(sprintf(
+	 * 'Location: https://%s%s',
+	 * $_SERVER['HTTP_HOST'],
+	 * $_SERVER['REQUEST_URI']
+	 * ));
+	 * exit();
+	 * }
+	 * }
+	 */
 
-    // Verificar se Logado
+	
+	
+	
+	// Verificar se Logado
+	
+	$user = new User ();
+	$user->loadCookie();
+	$dados = $user->dadosUsuario();	
+	
+	$page = new Page ( [ 
+			"tipoHeader" => "header"
+	], $dados );
 
-    $user = new User();
-    $dados = $user->dadosUsuario();
+	$page->setTpl ( "index" );
+} );
 
-    $page = new Page([
-        "tipoHeader" => "header"
-    ], $dados);
-    $page->setTpl("index");
-});
+$app->get ( '/admin(/)', function () {
 
-$app->get('/admin(/)', function () {
+	User::acessoAdmin ();
+	User::verifyLogin ();
+	
+	$user = new User();
+	$dados = $user->dadosUsuario();	
+	
+	$page = new PageAdmin ( [ ], $dados, "main" );
+	$page->setTpl ( "index" );
+} );
 
-    User::acessoAdmin();
-    User::verifyLogin();
-    $page = new PageAdmin([], [
+$app->get ( '/admin/login(/)', function () {
 
-        "Nome" => User::retornaNome()
-    ], "main");
-    $page->setTpl("index");
-});
+	User::acessoAdmin ();
+	User::verifyLogado ();
 
-$app->get('/admin/login(/)', function () {
+	$page = new PageAdmin ( [ 
+			"header" => false,
+			"footer" => false
+	] );
 
-    User::acessoAdmin();
-    User::verifyLogado();
+	$page->setTpl ( "login" );
+} );
 
-    $page = new PageAdmin([
-        "header" => false,
-        "footer" => false
-    ]);
+$app->post ( '/admin/login(/)', function () {
 
-    $page->setTpl("login");
-});
+	User::acessoAdmin ();
+	User::login ( $_POST ["login"], $_POST ["senha"] );
 
-$app->post('/admin/login(/)', function () {
+	header ( "location: /admin" );
+	exit ();
+} );
 
-    User::acessoAdmin();
-    User::login($_POST["login"], $_POST["senha"]);
+$app->get ( '/admin/logout(/)', function () {
 
-    header("location: /admin");
-    exit();
-});
+	User::logout ();
+	header ( "location: /" );
+	exit ();
+} );
 
-$app->get('/admin/logout(/)', function () {
+$app->get ( '/admin/login(/)', function () {
 
-    User::logout();
-    header("location: /");
-    exit();
-});
+	User::verifyLogado ();
 
-$app->get('/admin/login(/)', function () {
+	$page = new PageAdmin ( [ 
+			"header" => false,
+			"footer" => false
+	] );
 
-    User::verifyLogado();
+	$page->setTpl ( "login" );
+} );
 
-    $page = new PageAdmin([
-        "header" => false,
-        "footer" => false
-    ]);
+$app->get ( '/login(/)', function () {
 
-    $page->setTpl("login");
-});
+	$dados = array ();
+	$dados ["nome_pessoa"] = "";
+	$dados ["permissao"] = "";
 
-$app->get('/login(/)', function () {
+	$page = new Page ( [ 
+			"tipoHeader" => "header"
+	], $dados, "login" );
 
-    $dados = array();
-    $dados["nome_pessoa"] = "";
-    $dados["permissao"] = "";
+	$page->setTpl ( "loginSite" );
+	exit ();
+} );
 
-    $page = new Page([
-        "tipoHeader" => "header"
-    ], $dados, "login");
+$app->post ( '/login(/)', function () {
 
-    $page->setTpl("loginSite");
-    exit();
-});
+	if (isset ( $_POST ["conectado"] ) && $_POST ["conectado"] == "sim") {
+		$conexaoAutomatica = true;
+	} else {
+		$conexaoAutomatica = false;
+	}
+	
+	User::login ( $_POST ["login"], $_POST ["senha"], $conexaoAutomatica );
+	
+	header ( "location: /" );
+	exit ();
+} );
 
-$app->post('/login(/)', function () {
+$app->get ( '/recuperarSenha(/)', function () {
 
-    User::login($_POST["login"], $_POST["senha"]);
+	$msg = "inicial";
+	$code = "";
+	$idUsuario = "";
 
-    header("location: /");
+	if (isset ( $_GET ["msg"] )) {
+		$msg = $_GET ["msg"];
+	}
 
-    exit();
-});
+	if (isset ( $_GET ["code"] )) {
+		$code = $_GET ["code"];
 
-$app->get('/recuperarSenha(/)', function () {
+		if ($code != "") {
+			// Verificar validade do codigo
+			if (User::validaCodigoAlteracaoSenha ( $code )) {
+				$idUsuario = User::idCodigoAlteracaoSenha ( $code );
+				$msg = "alteracaoLiberada";
+			} else {
+				$msg = "codigoExpirado";
+			}
+		}
+	}
 
-    $msg = "inicial";
-    $code = "";
-    $idUsuario = "";
+	$dados = array (
+			"msg" => $msg,
+			"code" => $code,
+			"nome_pessoa" => "",
+			"idUsuario" => $idUsuario
+	);
 
-    if (isset($_GET["msg"])) {
-        $msg = $_GET["msg"];
-    }
+	$page = new Page ( [ 
+			"tipoHeader" => "header"
+	], $dados, "recuperaSenha" );
 
-    if (isset($_GET["code"])) {
-        $code = $_GET["code"];
+	$page->setTpl ( "recuperarSenha" );
+	exit ();
+} );
 
-        if ($code != "") {
-            // Verificar validade do codigo
-            if (User::validaCodigoAlteracaoSenha($code)) {
-                $idUsuario = User::idCodigoAlteracaoSenha($code);
-                $msg = "alteracaoLiberada";
-            } else {
-                $msg = "codigoExpirado";
-            }
-        }
-    }
+$app->post ( '/recuperarSenha(/)', function () {
 
-    $dados = array(
-        "msg" => $msg,
-        "code" => $code,
-        "nome_pessoa" => "",
-        "idUsuario" => $idUsuario
-    );
+	$email = "";
+	$senha = "";
+	$id = "";
 
-    $page = new Page([
-        "tipoHeader" => "header"
-    ], $dados, "recuperaSenha");
+	if (isset ( $_POST ["email"] )) {
+		$email = $_POST ["email"];
+	} else {
+		if (isset ( $_POST ["senha"] )) {
+			$senha = $_POST ["senha"];
+		}
 
-    $page->setTpl("recuperarSenha");
-    exit();
-});
+		if (isset ( $_POST ["idUsuario"] )) {
+			$id = $_POST ["idUsuario"];
+		}
 
-$app->post('/recuperarSenha(/)', function () {
+		if ($senha != "") {
+			$User = new User ();
+			$User->alteraSenha ( $id, $senha );
+			header ( "location: /recuperarSenha?msg=alterada" );
+			exit ();
+		}
+	}
 
-    $email = "";
-    $senha = "";
-    $id = "";
+	if (User::existeEmailUsuario ( $email )) {
+		header ( "location: /recuperarSenha?msg=sucesso" );
+	} else {
+		header ( "location: /recuperarSenha?msg=invalidEmail" );
+	}
 
-    if (isset($_POST["email"])) {
-        $email = $_POST["email"];
-    } else {
-        if (isset($_POST["senha"])) {
-            $senha = $_POST["senha"];
-        }
+	exit ();
+} );
 
-        if (isset($_POST["idUsuario"])) {
-            $id = $_POST["idUsuario"];
-        }
+$app->get ( '/cadastro(/)', function () {
 
-        if ($senha != "") {
-            $User = new User();
-            $User->alteraSenha($id, $senha);
-            header("location: /recuperarSenha?msg=alterada");
-            exit();
-        }
-    }
+	$user = new User ();
+	$dados = $user->dadosUsuario ();
 
-    if (User::existeEmailUsuario($email)) {
-        header("location: /recuperarSenha?msg=sucesso");
-    } else {
-        header("location: /recuperarSenha?msg=invalidEmail");
-    }
+	// Erifica se existe os Get, caso não cria a variável mas a deixa vazia
 
-    exit();
-});
+	if (isset ( $_GET ["erro"] )) {
+		$dados ["erro"] = $_GET ["erro"];
+	} else {
+		$dados ["erro"] = "emailValido";
+	}
+	if (isset ( $_GET ["nome"] )) {
+		$dados ["nome"] = $_GET ["nome"];
+	} else {
+		$dados ["nome"] = "";
+	}
+	if (isset ( $_GET ["sobrenome"] )) {
+		$dados ["sobrenome"] = $_GET ["sobrenome"];
+	} else {
+		$dados ["sobrenome"] = "";
+	}
+	if (isset ( $_GET ["celular"] )) {
+		$dados ["celular"] = $_GET ["celular"];
+	} else {
+		$dados ["celular"] = "";
+	}
+	if (isset ( $_GET ["fone"] )) {
+		$dados ["fone"] = $_GET ["fone"];
+	} else {
+		$dados ["fone"] = "";
+	}
+	if (isset ( $_GET ["sexo"] )) {
+		$dados ["sexo"] = $_GET ["sexo"];
+	} else {
+		$dados ["sexo"] = "X";
+	}
+	if (isset ( $_GET ["nascimento"] )) {
+		$dados ["nascimento"] = date ( 'Y-m-d', strtotime ( $_GET ["nascimento"] ) );
+	} else {
+		$dados ["nascimento"] = "";
+	}
 
-$app->get('/cadastro(/)', function () {
+	$page = new Page ( [ 
+			"tipoHeader" => "header"
+	], $dados, "cadastro" );
+	$page->setTpl ( "cadastro" );
+} );
 
-    $user = new User();
-    $dados = $user->dadosUsuario();
+$app->post ( '/cadastro(/)', function () {
 
-    // Erifica se existe os Get, caso não cria a variável mas a deixa vazia
+	$user = new User ();
+	$user->setData ( $_POST );
 
-    if (isset($_GET["erro"])) {
-        $dados["erro"] = $_GET["erro"];
-    } else {
-        $dados["erro"] = "emailValido";
-    }
-    if (isset($_GET["nome"])) {
-        $dados["nome"] = $_GET["nome"];
-    } else {
-        $dados["nome"] = "";
-    }
-    if (isset($_GET["sobrenome"])) {
-        $dados["sobrenome"] = $_GET["sobrenome"];
-    } else {
-        $dados["sobrenome"] = "";
-    }
-    if (isset($_GET["celular"])) {
-        $dados["celular"] = $_GET["celular"];
-    } else {
-        $dados["celular"] = "";
-    }
-    if (isset($_GET["fone"])) {
-        $dados["fone"] = $_GET["fone"];
-    } else {
-        $dados["fone"] = "";
-    }
-    if (isset($_GET["sexo"])) {
-        $dados["sexo"] = $_GET["sexo"];
-    } else {
-        $dados["sexo"] = "X";
-    }
-    if (isset($_GET["nascimento"])) {
-        $dados["nascimento"] = date('Y-m-d', strtotime($_GET["nascimento"]));
-    } else {
-        $dados["nascimento"] = "";
-    }
+	$dados = $user->cadastraUsuario ();
 
-    $page = new Page([
-        "tipoHeader" => "header"
-    ], $dados, "cadastro");
-    $page->setTpl("cadastro");
-});
+	if (isset ( $dados )) {
 
-$app->post('/cadastro(/)', function () {
+		header ( "location: /confirmacaoEnvioEmail" );
+	} else {
 
-    $user = new User();
-    $user->setData($_POST);
-    $dados = $user->cadastraUsuario();
-    if (isset($dados)) {
-        header("location: /confirmacaoEnvioEmail");
-    } else {
-        $user->setData($_POST);
-        header("location: /cadastro?erro=emailExistente&nome=" . $user->getnome() . "&sobrenome=" . $user->getsobrenome() . "&celular=" . $user->getcelular() . "&fone=" . $user->getfone() . "&sexo=" . $user->getsexo() . "&nascimento=" . $user->getnascimento());
-    }
+		$user->setData ( $_POST );
+		header ( "location: /cadastro?erro=emailExistente&nome=" . $user->getnome () . "&sobrenome=" . $user->getsobrenome () . "&celular=" . $user->getcelular () . "&fone=" . $user->getfone () . "&sexo=" . $user->getsexo () . "&nascimento=" . $user->getnascimento () );
+	}
+	exit ();
+} );
 
-    exit();
-});
+$app->get ( '/confirmacaoEnvioEmail(/)', function () {
+	$user = new User ();
+	$dados = $user->dadosUsuario ();
+	$page = new Page ( [ 
+			"tipoHeader" => "header"
+	], $dados, "confirmacaoEmail" );
+	$page->setTpl ( "confirmacaoEnvioEmail" );
+} );
 
-$app->get('/confirmacaoEnvioEmail(/)', function () {
-    $user = new User();
-    $dados = $user->dadosUsuario();
-    $page = new Page([
-        "tipoHeader" => "header"
-    ], $dados, "confirmacaoEmail");
-    $page->setTpl("confirmacaoEnvioEmail");
-});
+$app->get ( '/validacaoEmail(/)', function () {
+	$user = new User ();
+	$dados = array ();
 
-$app->get('/validacaoEmail(/)', function () {
-    $user = new User();
-    $dados = array();
+	if (isset ( $_GET ["code"] )) {
+		$dados ["code"] = $_GET ["code"];
+	} else {
+		$dados ["code"] = "erro";
+	}
 
-    if (isset($_GET["code"])) {
-        $dados["code"] = $_GET["code"];
-    } else {
-        $dados["code"] = "erro";
-    }
+	$retorno = $user->verificarValidacaoEmail ( $dados ["code"] );
 
-    $retorno = $user->verificarValidacaoEmail($dados["code"]);
+	$dados = $user->dadosUsuario ();
 
-    $dados = $user->dadosUsuario();
+	if ($retorno == true) {
+		$status = "sucesso";
+	} else {
+		$status = "fracasso";
+	}
 
-    if ($retorno == true) {
-        $status = "sucesso";
-    } else {
-        $status = "fracasso";
-    }
+	$dados ["status"] = $status;
 
-    $dados["status"] = $status;
-
-    $page = new Page([
-        "tipoHeader" => "header"
-    ], $dados, "emailValidado");
-    $page->setTpl("emailValidado");
-});
+	$page = new Page ( [ 
+			"tipoHeader" => "header"
+	], $dados, "emailValidado" );
+	$page->setTpl ( "emailValidado" );
+} );
 
 // Admin
 
-$app->get('/admin/users(/)', function () {
+$app->get ( '/admin/users(/)', function () {
 
-    User::acessoAdmin();
-    User::verifyLogin();
+	User::acessoAdmin ();
+	User::verifyLogin ();
 
-    $page = new PageAdmin([], [
+	$user = new User();
+	$dados = $user->dadosUsuario();	
+	
+	$page = new PageAdmin ( [ ], $dados, "usuarios" );
 
-        "Nome" => User::retornaNome()
-    ], "usuarios");
+	$page->setTpl ( "users" );
+	exit ();
+} );
 
-    $page->setTpl("users");
-    exit();
-});
+$app->get ( '/admin/users/create(/)', function () {
 
-$app->get('/admin/users/create(/)', function () {
+	User::acessoAdmin ();
+	User::verifyLogin ();
+	$user = new User();
+	$dados = $user->dadosUsuario();	
+	$page = new PageAdmin ( [ ], $dados, "usuarios" );
 
-    User::acessoAdmin();
-    User::verifyLogin();
+	$page->setTpl ( "users-create" );
+	exit ();
+} );
 
-    $page = new PageAdmin([], [
+$app->get ( '/admin/users/:iduser/delete(/)', function ($iduser) {
+	User::acessoAdmin ();
+	User::verifyLogin ();
 
-        "Nome" => User::retornaNome()
-    ], "usuarios");
+	$user = new User ();
+	$user->get ( ( int ) $iduser );
 
-    $page->setTpl("users-create");
-    exit();
-});
+	$user->delete ();
 
-$app->get('/admin/users/:iduser/delete(/)', function ($iduser) {
-    User::acessoAdmin();
-    User::verifyLogin();
+	header ( "Location: /admin/users" );
+	exit ();
+} );
 
-    $user = new User();
-    $user->get((int) $iduser);
+$app->get ( '/admin/users/:iduser(/)', function ($iduser) {
 
-    $user->delete();
+	User::acessoAdmin ();
+	User::verifyLogin ();
 
-    header("Location: /admin/users");
-    exit();
-});
+	$page = new PageAdmin ();
 
-$app->get('/admin/users/:iduser(/)', function ($iduser) {
+	$user = new User ();
 
-    User::acessoAdmin();
-    User::verifyLogin();
+	$user->get ( ( int ) $iduser );
 
-    $page = new PageAdmin();
+	$page->setTpl ( "users-update", array (
+			"user" => $user->getData ()
+	) );
+	exit ();
+} );
 
-    $user = new User();
+$app->get ( '/admin/perfil(/)', function () {
 
-    $user->get((int) $iduser);
+	User::acessoAdmin ();
+	User::verifyLogin ();
 
-    $page->setTpl("users-update", array(
-        "user" => $user->getData()
-    ));
-    exit();
-});
+	$user = new User ();
 
-$app->get('/admin/perfil(/)', function () {
+	$dados = $user->dadosUsuario ();	
 
-    User::acessoAdmin();
-    User::verifyLogin();
+	$page = new PageAdmin ( [ ], $dados, "perfil" );
 
-    $user = new User();
+	$page->setTpl ( "perfil" );
+	exit ();
+} );
 
-    $dados = $user->dadosUsuario();   
+$app->post ( '/admin/users/create(/)', function () {
+	User::acessoAdmin ();
+	User::verifyLogin ();
 
-    $dados["Nome"] = User::retornaNome();
-    
-    $page = new PageAdmin([], $dados, "perfil");
+	$user = new User ();
 
-    $page->setTpl("perfil");
-    exit();
-});
+	$_POST ["inadmin"] = (isset ( $_POST ["inadmin"] )) ? 1 : 0;
 
-$app->post('/admin/users/create(/)', function () {
-    User::acessoAdmin();
-    User::verifyLogin();
+	$user->setData ( $_POST );
 
-    $user = new User();
+	$user->save ();
 
-    $_POST["inadmin"] = (isset($_POST["inadmin"])) ? 1 : 0;
+	header ( "Location: /admin/users" );
+	exit ();
+} );
 
-    $user->setData($_POST);
+$app->post ( '/admin/users/:iduser(/)', function ($iduser) {
+	User::acessoAdmin ();
+	User::verifyLogin ();
 
-    $user->save();
+	$user = new User ();
 
-    header("Location: /admin/users");
-    exit();
-});
+	$_POST ["inadmin"] = (isset ( $_POST ["inadmin"] )) ? 1 : 0;
 
-$app->post('/admin/users/:iduser(/)', function ($iduser) {
-    User::acessoAdmin();
-    User::verifyLogin();
+	$user->get ( ( int ) $iduser );
+	$user->setData ( $_POST );
+	$user->update ();
 
-    $user = new User();
+	header ( "Location: /admin/users" );
+	exit ();
+} );
 
-    $_POST["inadmin"] = (isset($_POST["inadmin"])) ? 1 : 0;
+$app->get ( '/admin/forgot(/)', function () {
 
-    $user->get((int) $iduser);
-    $user->setData($_POST);
-    $user->update();
+	$page = new PageAdmin ( [ 
+			"header" => false,
+			"footer" => false
+	] );
 
-    header("Location: /admin/users");
-    exit();
-});
+	$page->setTpl ( "forgot" );
+} );
 
-$app->get('/admin/forgot(/)', function () {
+$app->post ( '/admin/forgot(/)', function () {
 
-    $page = new PageAdmin([
-        "header" => false,
-        "footer" => false
-    ]);
+	$user = User::getForgot ( $_POST ["email"] );
+	header ( "Location: /admin/forgot/sent" );
+	exit ();
+} );
 
-    $page->setTpl("forgot");
-});
+$app->get ( '/admin/forgot/sent(/)', function () {
 
-$app->post('/admin/forgot(/)', function () {
+	$page = new PageAdmin ( [ 
+			"header" => false,
+			"footer" => false
+	] );
 
-    $user = User::getForgot($_POST["email"]);
-    header("Location: /admin/forgot/sent");
-    exit();
-});
+	$page->setTpl ( "forgot-sent" );
+} );
 
-$app->get('/admin/forgot/sent(/)', function () {
+$app->get ( '/admin/forgot/reset(/)', function () {
 
-    $page = new PageAdmin([
-        "header" => false,
-        "footer" => false
-    ]);
+	$user = User::validForgotDecrypt ( $_GET ["code"] );
 
-    $page->setTpl("forgot-sent");
-});
+	$page = new PageAdmin ( [ 
+			"header" => false,
+			"footer" => false
+	] );
 
-$app->get('/admin/forgot/reset(/)', function () {
+	$page->setTpl ( "forgot-reset", array (
+			"name" => $user ["desperson"],
+			"code" => $_GET ["code"]
+	) );
+} );
 
-    $user = User::validForgotDecrypt($_GET["code"]);
+$app->post ( '/admin/forgot/reset(/)', function () {
 
-    $page = new PageAdmin([
-        "header" => false,
-        "footer" => false
-    ]);
+	$forgot = User::validForgotDecrypt ( $_POST ["code"] );
 
-    $page->setTpl("forgot-reset", array(
-        "name" => $user["desperson"],
-        "code" => $_GET["code"]
-    ));
-});
+	User::setForgotUsed ( $forgot ["idrecovery"] );
 
-$app->post('/admin/forgot/reset(/)', function () {
+	$user = new User ();
 
-    $forgot = User::validForgotDecrypt($_POST["code"]);
+	$user->get ( ( int ) $forgot ["iduser"] );
 
-    User::setForgotUsed($forgot["idrecovery"]);
+	$user->setPassword ( $_POST ["password"] );
 
-    $user = new User();
+	$page = new PageAdmin ( [ 
+			"header" => false,
+			"footer" => false
+	] );
 
-    $user->get((int) $forgot["iduser"]);
+	$page->setTpl ( "forgot-reset-success" );
+} );
 
-    $user->setPassword($_POST["password"]);
-
-    $page = new PageAdmin([
-        "header" => false,
-        "footer" => false
-    ]);
-
-    $page->setTpl("forgot-reset-success");
-});
-
-$app->run();
+$app->run ();
 
 ?>
