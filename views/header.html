@@ -31,10 +31,10 @@
 						
 						{else}
 						
-						<a href="#">{$nome_pessoa}</a> <a href="/admin/logout">(sair) </a> | 
+						<a href="#">{function="nameCase($nome_pessoa)"}</a> <a href="/admin/logout">(sair) </a> | 
 						<a href="#">Gerenciar listas </a>
 
-						{if="$permissao=='MAS'"}
+						{if="$permissao=='ADM'"}
 						| 
 						<a href="/admin">Admin </a>
 						{/if}

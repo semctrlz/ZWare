@@ -21,7 +21,7 @@ class User extends Model {
 		) );
 
 		if (count ( $results ) === 0) {
-			throw new \Exception ( "Usuário não encontrado ou senha inválida." );
+			throw new \Exception ( "UsuÃ¡rio nÃ£o encontrado ou senha invÃ¡lida." );
 		}
 
 		$data = $results [0];
@@ -39,7 +39,7 @@ class User extends Model {
 
 			return $user;
 		} else {
-			throw new \Exception ( "Usuário não encontrado ou senha inválida." );
+			throw new \Exception ( "UsuÃ¡rio nÃ£o encontrado ou senha invÃ¡lida." );
 		}
 	}
 	public static function manterConectado($id_usuario = int) {
@@ -202,22 +202,51 @@ class User extends Model {
 
 					":id_usuario" => ( int ) $_SESSION [user::SESSION] ["id_usuario"]
 			) );
-
-			// Cria uma nova variável com o primeiro registro da consulta acima
+            
+			// Cria uma nova variÃ¡vel com o primeiro registro da consulta acima
 			$NovaArray = $results [0];
-
-			// Trata nome e sobrenome
-			$NovaArray ["nome_pessoa"] = utf8_encode ( mb_convert_case ( $results [0] ["nome_pessoa"], MB_CASE_TITLE, "ISO-8859-1" ) );
-			$NovaArray ["sobrenome_pessoa"] = utf8_encode ( mb_convert_case ( $results [0] ["sobrenome_pessoa"], MB_CASE_TITLE, "ISO-8859-1" ) );
+            
+			//Lista de campos:
 			
+			/*
+			 *id_usuario                 => int
+			 *login_usuario              => string
+			 *senha_usuario              => string (hash)
+			 *data_cadastro_usuario      => datetime
+			 *nome_pessoa                => string
+			 *sobrenome_pessoa           => string
+			 *email_pessoa               => string
+			 *data_cadastro_pessoa       => datetime
+			 *pessoa_ativa               => tyniint (1 = ativo, 0 = inativo)
+			 *sexo_pessoa                => char(1) (M = Masculino, F = feminino, X = indefinido)
+			 *data_nascimento_pessoa     => date
+			 *celular                    => varchar(15) (00) 00000-0000
+			 *fone                       => varchar(15) (00) #0000-0000
+			 *cep                        => string 00000000
+			 *tipo_logradouro            => string
+			 *logradouro                 => string
+			 *numero                     => string
+			 *complemento                => string
+			 *bairro                     => string
+			 *cidade                     => string
+			 *estado                     => char(2)
+			 *pais                       => string
+			 *data_cadastro_endereco     => datetime
+			 *nome_profissao             => string
+			 *descricao_profissao        => string
+			 *profissao_ativa            => tyniint (1 = ativo, 0 = inativo)
+			 *permissao                  => char(3) (ADM = tem acesso administrativo, USU = não tem acesso administrativo)
+			 * 
+			 */								
+			
+
 			return $NovaArray;
-		} else {
-			$results = [ 
-					"nome_pessoa" => ""
-			];
-			return $results;
 		}
 	}
+	PUBLIC static function nomeCase($string = string){
+	    return ucwords($string);
+	}
+	
 	public static function verifyLogado() {
 		if (isset ( $_SESSION [User::SESSION] ) && $_SESSION [User::SESSION] && ( int ) $_SESSION [user::SESSION] ["id_usuario"] > 0) {
 
@@ -247,52 +276,52 @@ class User extends Model {
 	}
 	public static function adjustments($text = string) {
 		$accents = array (
-				"á",
-				"à",
-				"â",
-				"ã",
-				"ä",
-				"é",
-				"è",
-				"ê",
-				"ë",
-				"í",
-				"ì",
-				"î",
-				"ï",
-				"ó",
-				"ò",
-				"ô",
-				"õ",
-				"ö",
-				"ú",
-				"ù",
-				"û",
-				"ü",
-				"ç",
-				"Á",
-				"À",
-				"Â",
-				"Ã",
-				"Ä",
-				"É",
-				"È",
-				"Ê",
-				"Ë",
-				"Í",
-				"Ì",
-				"Î",
-				"Ï",
-				"Ó",
-				"Ò",
-				"Ô",
-				"Õ",
-				"Ö",
-				"Ú",
-				"Ù",
-				"Û",
-				"Ü",
-				"Ç"
+				"Ã¡",
+				"Ã ",
+				"Ã¢",
+				"Ã£",
+				"Ã¤",
+				"Ã©",
+				"Ã¨",
+				"Ãª",
+				"Ã«",
+				"Ã­",
+				"Ã¬",
+				"Ã®",
+				"Ã¯",
+				"Ã³",
+				"Ã²",
+				"Ã´",
+				"Ãµ",
+				"Ã¶",
+				"Ãº",
+				"Ã¹",
+				"Ã»",
+				"Ã¼",
+				"Ã§",
+				"Ã�",
+				"Ã€",
+				"Ã‚",
+				"Ãƒ",
+				"Ã„",
+				"Ã‰",
+				"Ãˆ",
+				"ÃŠ",
+				"Ã‹",
+				"Ã�",
+				"ÃŒ",
+				"ÃŽ",
+				"Ã�",
+				"Ã“",
+				"Ã’",
+				"Ã”",
+				"Ã•",
+				"Ã–",
+				"Ãš",
+				"Ã™",
+				"Ã›",
+				"Ãœ",
+				"Ã‡"
 		);
 		$utf8 = array (
 				"&aacute;",
@@ -360,10 +389,10 @@ class User extends Model {
 
 		if (count ( $results ) > 0) {
 
-			// Existe outro usuário cadastrado com este email
+			// Existe outro usuÃ¡rio cadastrado com este email
 			$this->{"set" . "erro"} ( "emailExiste" );
 		} else {
-			// Não existe outro usuario com este email
+			// NÃ£o existe outro usuario com este email
 
 			// Cria usuario sem link de pessoa
 
@@ -379,7 +408,7 @@ class User extends Model {
 					":SENHA" => $senhaSegura
 			) );
 
-			// Envia um email de confirmação
+			// Envia um email de confirmaÃ§Ã£o
 
 			$link = "https://zware.com.br/validacaoEmail?code=$codigoParaConfirmacao";
 
@@ -511,7 +540,7 @@ class User extends Model {
 		) );
 	}
 
-	// Retorna os dados do usuario através do id de usuário
+	// Retorna os dados do usuario atravÃ©s do id de usuÃ¡rio
 	public function get($id_usuario) {
 		$sql = new Sql ();
 
@@ -574,7 +603,7 @@ class User extends Model {
 
 		if (count ( $results ) === 0) {
 
-			throw new \Exception ( "Não foi possível recuperar a senha." );
+			throw new \Exception ( "NÃ£o foi possÃ­vel recuperar a senha." );
 		} else {
 
 			$data = $results [0];
@@ -588,7 +617,7 @@ class User extends Model {
 
 			if (count ( $results2 ) === 0) {
 
-				throw new \Exception ( "Não foi possível recuperar a senha." );
+				throw new \Exception ( "NÃ£o foi possÃ­vel recuperar a senha." );
 			} else {
 
 				$dataRecovery = $results2 [0];
@@ -634,7 +663,7 @@ class User extends Model {
 
 		if (count ( $results ) === 0) {
 
-			throw new \Exception ( "Não foi possível recuperar a senha." );
+			throw new \Exception ( "NÃ£o foi possÃ­vel recuperar a senha." );
 		} else {
 
 			return $results [0];
